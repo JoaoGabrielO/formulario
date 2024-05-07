@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Declaração de Bens</title>
+    <style>
+      body {
+        position: relative;
+        height: 100vh; /* Altura total da janela do navegador */
+        margin: 0; /* Remover margens padrão */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif; /* Definindo a fonte para Arial */
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      button {
+        margin-bottom: 10px;
+        display: inline-block;
+        margin-right: 20px; /* Espaçamento entre os botões */
+        padding: 10px 20px; /* Espaçamento interno do botão */
+        border: none; /* Remover a borda padrão */
+        border-radius: 5px; /* Bordas arredondadas */
+        background-color: #007bff; /* Cor de fundo do botão */
+        color: #fff; /* Cor do texto do botão */
+        font-size: 16px; /* Tamanho da fonte do botão */
+        cursor: pointer; /* Cursor do mouse ao passar sobre o botão */
+        transition: background-color 0.3s; /* Transição suave da cor de fundo */
+      }
+
+      button:hover {
+        background-color: #5b88a5; /* Cor de fundo do botão ao passar o mouse sobre */
+      }
+
+      .icone {
+        position: absolute;
+        top: 10px; /* Distância do topo */
+        left: 10px; /* Distância da esquerda */
+        width: 300px; /* Largura do ícone */
+        height: 100px; /* Altura do ícone */
+        background-image: url('https://colaboraconcursos.com.br/wp-content/uploads/2023/01/itapecerica.jpg');
+        background-size: cover; /* Para garantir que o ícone cubra toda a área */
+        background-position: center; /* Para centralizar o ícone */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Declaração de Bens</h1>
+
+    <!-- Adicionando os botões lado a lado -->
+    <div>
+      <button type="button" onclick="possuoBens()">Possuo bens</button>
+      <button type="button" onclick="naoPossuoBens()">Não possuo bens</button>
+    </div>
+
+    <!-- Ícone -->
+    <div class="icone"></div>
+
+    <!-- Script para manipular os cliques nos botões -->
+    <script>
+      function possuoBens() {
+        window.location.href = "{{ url_for('create') }}";
+      }
+
+      function naoPossuoBens() {
+        window.location.href = "{{ url_for('nao_possui_bens') }}";
+      }
+    </script>
+  </body>
+</html>

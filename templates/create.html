@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Declaração de Bens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: calc(50% - 5px);
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    #nome-completo {
+      display: flex;
+    }
+
+    #nome-completo input[type="text"] {
+      width: calc(50% - 5px);
+      margin-right: 10px;
+    }
+
+    #rg,
+    #cpf,
+    #cargo_publico,
+    #endereco_rua,
+    #endereco_cep {
+      width: 100%;
+    }
+
+    #patrimonio_table,
+    #conjuge_table,
+    #dependente_table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    #patrimonio_table th,
+    #patrimonio_table td,
+    #conjuge_table th,
+    #conjuge_table td,
+    #dependente_table th,
+    #dependente_table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #5b88a5;
+    }
+
+    input[type="submit"] {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #28a745; /* Cor verde */
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838; /* Cor verde mais escura no hover */
+    }
+  </style>
+</head>
+<body>
+<h1>Declaração de Bens</h1>
+<form action="" method="post">
+
+  <div style="display: flex; align-items: center;">
+    <label for="nome-completo" style="margin-right: 10px;">Nome:</label>
+    <input type="text" id="nome-completo" name="nome-completo" required>
+    <label for="sobrenome" style="margin-left: 10px;">Sobrenome:</label>
+    <input type="text" id="sobrenome" name="sobrenome">
+  </div>
+
+  <div style="display: flex; align-items: center;">
+    <label for="rg" style="margin-right: 10px;">RG:</label>
+    <input type="text" id="rg" name="rg" required>
+    <label for="cpf" style="margin-left: 10px;">CPF:</label>
+    <input type="text" id="cpf" name="cpf">
+  </div>
+
+  <label for="cargo_publico" style="display: inline-block; width: 200px;">Cargo/Emprego Público:</label>
+  <input type="text" id="cargo_publico" name="cargo_publico" required style="display: inline-block;">
+
+  <div style="display: flex; align-items: center;">
+    <label for="endereco_rua" style="margin-right: 10px;">Endereço (Rua):</label>
+    <input type="text" id="endereco_rua" name="endereco_rua" required>
+    <label for="endereco_cep" style="margin-left: 10px;">Endereço (CEP):</label>
+    <input type="text" id="endereco_cep" name="endereco_cep">
+  </div>
+
+  <!-- Tabela para Descrição do Patrimônio e Valor -->
+  <table id="patrimonio_table">
+    <thead>
+    <tr>
+      <th>Descrição do Patrimônio</th>
+      <th>Valor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><input type="text" name="descricao_patrimonio[]" required></td>
+      <td><input type="text" name="valor_patrimonio[]" required></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Botão para adicionar mais linhas -->
+  <button type="button" onclick="adicionarLinha()">Adicionar Linha</button>
+
+  <br><br>
+
+  <!-- Radio button para perguntar se possui cônjuge -->
+  <div class="radio-group" style="display: flex; align-items: center;">
+    <label for="possui_conjuge" style="margin-right: 10px;">Possui cônjuge?</label>
+    <input type="radio" id="possui_conjuge_sim" name="possui_conjuge" value="sim" onclick="exibirConjugeForm()" style="margin-right: 10px;">
+    <label for="possui_conjuge_sim">Sim</label>
+    <input type="radio" id="possui_conjuge_nao" name="possui_conjuge" value="nao" onclick="esconderConjugeForm()">
+    <label for="possui_conjuge_nao">Não</label>
+  </div>
+
+  <!-- Div para conter o formulário do cônjuge -->
+  <div id="conjuge_form" style="display: none;">
+    <label for="nome_conjuge">Nome do cônjuge:</label>
+    <input type="text" id="nome_conjuge" name="nome_conjuge"><br><br>
+    <label for="rg_conjuge">RG do cônjuge:</label>
+    <input type="text" id="rg_conjuge" name="rg_conjuge"><br><br>
+
+    <!-- Tabela para Descrição do Patrimônio e Valor do cônjuge -->
+    <table id="conjuge_table">
+      <thead>
+      <tr>
+        <th>Descrição do Patrimônio (Cônjuge)</th>
+        <th>Valor (Cônjuge)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><input type="text" name="descricao_patrimonio_conjuge[]" required></td>
+        <td><input type="text" name="valor_patrimonio_conjuge[]" required></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Botão para adicionar mais linhas no patrimônio do cônjuge -->
+    <button type="button" onclick="adicionarLinhaConjuge()">Adicionar Linha (Cônjuge)</button>
+  </div>
+
+  <br><br>
+
+  <!-- Radio button para perguntar se possui filhos/dependente econômico -->
+  <div class="radio-group" style="display: flex; align-items: center;">
+    <label for="possui_dependente" style="margin-right: 10px;">Possui filhos/dependente econômico?</label>
+    <input type="radio" id="possui_dependente_sim" name="possui_dependente" value="sim" onclick="document.getElementById('dependente_form').style.display = 'block';" style="margin-right: 10px;">
+    <label for="possui_dependente_sim">Sim</label>
+    <input type="radio" id="possui_dependente_nao" name="possui_dependente" value="nao" onclick="document.getElementById('dependente_form').style.display = 'none';">
+    <label for="possui_dependente_nao">Não</label>
+  </div>
+
+  <!-- Div para conter o formulário do dependente -->
+  <div id="dependente_form" style="display: none;">
+    <label for="nome_dependente">Nome do dependente:</label>
+    <input type="text" id="nome_dependente" name="nome_dependente"><br><br>
+    <label for="rg_dependente">RG do dependente:</label>
+    <input type="text" id="rg_dependente" name="rg_dependente"><br><br>
+
+    <!-- Tabela para Descrição do Patrimônio e Valor do dependente -->
+    <table id="dependente_table">
+      <thead>
+      <tr>
+        <th>Descrição do Patrimônio (Dependente)</th>
+        <th>Valor (Dependente)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><input type="text" name="descricao_patrimonio_dependente[]" required></td>
+        <td><input type="text" name="valor_patrimonio_dependente[]" required></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Botão para adicionar mais linhas no patrimônio do dependente -->
+    <button type="button" onclick="adicionarLinhaDependente()">Adicionar Linha (Dependente)</button>
+  </div>
+
+  <br><br>
+  <input type="submit" value="Criar">
+</form>
+
+<script>
+  function adicionarLinha() {
+    var table = document.getElementById("patrimonio_table").getElementsByTagName('tbody')[0];
+    var newRow = table.insertRow(table.rows.length);
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+    cell1.innerHTML = '<input type="text" name="descricao_patrimonio[]" required>';
+    cell2.innerHTML = '<input type="text" name="valor_patrimonio[]" required>';
+  }
+
+  function adicionarLinhaConjuge() {
+    var table = document.getElementById("conjuge_table").getElementsByTagName('tbody')[0];
+    var newRow = table.insertRow(table.rows.length);
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+    cell1.innerHTML = '<input type="text" name="descricao_patrimonio_conjuge[]" required>';
+    cell2.innerHTML = '<input type="text" name="valor_patrimonio_conjuge[]" required>';
+  }
+
+  function exibirConjugeForm() {
+    document.getElementById("conjuge_form").style.display = "block";
+  }
+
+  function esconderConjugeForm() {
+    document.getElementById("conjuge_form").style.display = "none";
+  }
+
+  function adicionarLinhaDependente() {
+    var table = document.getElementById("dependente_table").getElementsByTagName('tbody')[0];
+    var newRow = table.insertRow(table.rows.length);
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+    cell1.innerHTML = '<input type="text" name="descricao_patrimonio_dependente[]" required>';
+    cell2.innerHTML = '<input type="text" name="valor_patrimonio_dependente[]" required>';
+  }
+</script>
+
+</body>
+</html>
