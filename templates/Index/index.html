@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Declaração de Bens</title>
+
+  <style>
+    main {
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .imgLogo {
+      width: 25%;
+
+      border-radius: 105px;
+
+      position: relative;
+      top: 1rem;
+    }
+
+    div {
+      margin-top: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+    }
+
+    .DivisaoBens {
+      width: 50%;
+
+      display: flex;
+      justify-content: space-around;
+    }
+
+    button {
+      border-radius: 10px;
+      border: none;
+
+      height: 4rem;
+      width: 30%;
+
+      background-color: white;
+      color: black;
+
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      /* Enable transitions */
+
+    }
+
+    button:hover {
+      background: rgb(18, 114, 157);
+      background: linear-gradient(215deg,
+          rgba(18, 114, 157, 0.5074404761904762) 20%,
+          rgba(252, 252, 252, 0.11248249299719892) 100%);
+
+      transform: scale(1.1);
+
+      color: white;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../../static/style.css">
+
+</head>
+
+<body>
+  <main>
+    <img src="https://assets.infra.grancursosonline.com.br/projeto/prefeitura-municipal-de-itapecerica-da-serra-sp.png" class="imgLogo">
+    <div>
+      <h1>Declaração de Bens</h1>
+    </div>
+
+    <!-- Adicionando os botões lado a lado -->
+    <div class="DivisaoBens">
+      <button class="PossuiBens" onClick="possuoBens()">Possuo Bens</button>
+      <button class="NaoPossuiBens" onClick="naoPossuoBens()">Não Possuo Bens</button>
+    </div>
+
+    <!-- Ícone -->
+
+    <!-- Script para manipular os cliques nos botões -->
+    <script>
+      function possuoBens() {
+        window.location.href = "{{ url_for('create') }}";
+      }
+
+      function naoPossuoBens() {
+        window.location.href = "{{ url_for('nao_possui_bens') }}";
+      }
+    </script>
+  </main>
+
+</body>
+
+</html>

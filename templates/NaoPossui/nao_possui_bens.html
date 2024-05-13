@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Criar Funcionário</title>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: .3rem;
+    }
+
+    input[type="text"],
+    input[type="submit"] {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+      font-family: Arial, sans-serif;
+
+      width: 100%;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+      outline: none;
+
+    }
+
+    input[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      margin-top: 1.5rem;
+      width: 20%;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .divCheckBox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: .2rem;
+
+      width: 100%;
+    }
+
+    .divRuaCep {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+    }
+
+    .divNomeCargo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+
+    }
+
+    .divRgCPF {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+
+    }
+
+    .divCheckBox{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: .2rem;
+      margin-top: 2rem;
+
+      width: 100%;
+    }
+
+    .labelCheckBox {
+      margin-bottom: 0rem;
+    }
+
+    .formInputs{
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+  </style>
+</head>
+
+<body>
+  <h1>Declaração de bens</h1>
+  <form class="formInputs" action="" method="post">
+
+    <div class="divNomeCargo">
+      <div>
+        <label for="nome_completo">Nome Completo:</label>
+        <input class="inputs" type="text" id="nome_completo" name="nome_completo" required>
+      </div>
+
+      <div>
+        <label for="rg">RG:</label>
+        <input class="inputs" type="text" id="rg" name="rg" required>
+      </div>
+    </div>
+
+    <div class="divRgCPF">
+      <div>
+        <label for="cpf">CPF:</label>
+        <input class="inputs" type="text" id="cpf" name="cpf" required>
+      </div>
+
+      <div>
+        <label for="cargo_publico">Cargo Público:</label>
+        <input class="inputs" type="text" id="cargo_publico" name="cargo_publico" required>
+      </div>
+    </div>
+
+    <div class="divRuaCep">
+      <div>
+        <label for="endereco_rua">Endereço (Rua):</label>
+        <input class="inputs" type="text" id="endereco_rua" name="endereco_rua" required>
+      </div>
+
+      <div>
+        <label for="endereco_cep">Endereço (CEP):</label>
+        <input class="inputs" type="text" id="endereco_cep" name="endereco_cep">
+      </div>
+    </div>
+
+    <div class="divCheckBox">
+      <input type="checkbox" id="confirm_information" name="confirm_information" required>
+      <label class="labelCheckBox" for="confirm_information">Confirmo que as informações acima estão corretas:</label>
+    </div>
+
+    <input class="inputCriar" type="submit" value="Criar">
+  </form>
+</body>
+
+</html>

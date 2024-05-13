@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Declaração de Bens</title>
+  <link rel="stylesheet" href="./create.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .divNomeCargo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+    }
+
+    .radio-group{
+      margin-top: -1rem;
+    }
+
+    .divRgCPF {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+    }
+
+    
+    .divNomeCargo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+    }
+
+    .divRgCPF {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+    }
+    .divRuaCep {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2rem;
+
+      width: 100%;
+    }
+
+    .formInputs {
+      margin-top: 3rem;
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .descricao_patrimonio {
+      margin-top: 2rem;
+    }
+
+    label {
+      display: block;
+
+      margin-top: .6rem;
+    }
+
+
+    .inputsTitular {
+      width: 90%;
+      height: 1.2rem;
+
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+
+      padding-left: 1rem;
+      padding-right: 1rem;
+
+    }
+
+    .inputsPatrimonioTitular,
+    .inputsConjuge,
+    .inputsDependente {
+      width: 84%;
+      height: 1.2rem;
+
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+
+    .inputsDadosConjuge,
+    .inputsDadosDependente {
+      width: 92.5%;
+      height: 1.2rem;
+
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    #patrimonio_table th,
+    #patrimonio_table td,
+    #conjuge_table th,
+    #conjuge_table td,
+    #dependente_table th,
+    #dependente_table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    button {
+      width: 10%;
+      height: 2rem;
+
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      margin-top: 2rem;
+    }
+
+    button:hover {
+      background-color: #5b88a5;
+    }
+    .buttonAdicionarConjuge,
+    .buttonAdicionarDependente {
+      position: relative;
+      left: 12.5rem;
+
+      width: 25%;
+    }
+
+    input[type="submit"] {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #28a745;
+      /* Cor verde */
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+      /* Cor verde mais escura no hover */
+    }
+
+    .divCheckBox{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: .2rem;
+      margin-top: 1rem;
+
+      width: 100%;
+
+    }
+
+    .labelCheckBox{
+      margin-top: 0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Declaração de Bens</h1>
+  <form action="" method="post" class="formInputs">
+
+    <div class="divNomeCargo">
+      <div>
+        <label for="nome-completo">Nome Completo:</label>
+        <input class="inputsTitular" type="text" id="nome-completo" name="nome-completo" required>
+      </div>
+
+      <div>
+        <label for="cargo_publico">Cargo/Emprego Público:</label>
+        <input class="inputsTitular" type="text" id="cargo_publico" name="cargo_publico" required>
+      </div>
+
+    </div>
+
+    <div class="divRgCPF">
+      <div>
+        <label for="rg">RG:</label>
+        <input type="text" id="rg" name="rg" class="inputsTitular" required>
+      </div>
+
+      <div>
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" class="inputsTitular" required>
+      </div>
+    </div>
+
+    <div class="divRuaCep">
+      <div>
+        <label for="endereco_rua">Endereço (Rua):</label>
+        <input type="text" id="endereco_rua" name="endereco_rua" class="inputsTitular" required>
+      </div>
+
+      <div>
+        <label for="endereco_cep">Endereço (CEP):</label>
+        <input type="text" id="endereco_cep" name="endereco_cep" class="inputsTitular" required>
+      </div>
+    </div>
+
+    <!-- Tabela para Descrição do Patrimônio e Valor -->
+    <table id="patrimonio_table" class="descricao_patrimonio">
+      <thead>
+        <tr>
+          <th>Descrição do Patrimônio</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input class="inputsPatrimonioTitular" type="text" name="descricao_patrimonio[]" required></td>
+          <td><input class="inputsPatrimonioTitular" type="text" name="valor_patrimonio[]" required></td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Botão para adicionar mais linhas -->
+    <button type="button" onclick="adicionarLinha()">Adicionar Linha</button>
+
+    <br><br>
+
+    <!-- Radio button para perguntar se possui cônjuge -->
+    <div class="radio-group" style="display: flex; align-items: center;">
+      <label for="possui_conjuge" style="margin-right: 10px;">Possui cônjuge?</label>
+      <input class="" type="radio" id="possui_conjuge_sim" name="possui_conjuge" value="sim" onclick="exibirConjugeForm()"
+        style="margin-right: 10px;">
+      <label for="possui_conjuge_sim">Sim</label>
+      <input type="radio" id="possui_conjuge_nao" name="possui_conjuge" value="nao" onclick="esconderConjugeForm()">
+      <label for="possui_conjuge_nao">Não</label>
+    </div>
+
+    <!-- Div para conter o formulário do cônjuge -->
+    <div id="conjuge_form" style="display: none;">
+      <label for="nome_conjuge">Nome do cônjuge:</label>
+      <input class="inputsDadosConjuge" type="text" id="nome_conjuge" name="nome_conjuge"><br><br>
+      <label for="rg_conjuge">RG do cônjuge:</label>
+      <input class="inputsDadosConjuge" type="text" id="rg_conjuge" name="rg_conjuge"><br><br>
+
+      <!-- Tabela para Descrição do Patrimônio e Valor do cônjuge -->
+      <table id="conjuge_table">
+        <thead>
+          <tr>
+            <th>Descrição do Patrimônio (Cônjuge)</th>
+            <th>Valor (Cônjuge)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input class="inputsConjuge" type="text" name="descricao_patrimonio_conjuge[]" required></td>
+            <td><input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Botão para adicionar mais linhas no patrimônio do cônjuge -->
+      <button class="buttonAdicionarConjuge" type="button" onclick="adicionarLinhaConjuge()">Adicionar Linha
+        (Cônjuge)</button>
+    </div>
+
+    <br><br>
+
+    <!-- Radio button para perguntar se possui filhos/dependente econômico -->
+    <div class="radio-group" style="display: flex; align-items: center;">
+      <label for="possui_dependente" style="margin-right: 10px;">Possui filhos/dependente econômico?</label>
+      <input type="radio" id="possui_dependente_sim" name="possui_dependente" value="sim"
+        onclick="document.getElementById('dependente_form').style.display = 'block';" style="margin-right: 10px;">
+      <label for="possui_dependente_sim">Sim</label>
+      <input type="radio" id="possui_dependente_nao" name="possui_dependente" value="nao"
+        onclick="document.getElementById('dependente_form').style.display = 'none';">
+      <label for="possui_dependente_nao">Não</label>
+    </div>
+
+    <!-- Div para conter o formulário do dependente -->
+    <div id="dependente_form" style="display: none;">
+      <label for="nome_dependente">Nome do dependente:</label>
+      <input class="inputsDadosDependente" type="text" id="nome_dependente" name="nome_dependente"><br><br>
+      <label for="rg_dependente">RG do dependente:</label>
+      <input class="inputsDadosDependente" type="text" id="rg_dependente" name="rg_dependente"><br><br>
+
+      <!-- Tabela para Descrição do Patrimônio e Valor do dependente -->
+      <table id="dependente_table">
+        <thead>
+          <tr>
+            <th>Descrição do Patrimônio (Dependente)</th>
+            <th>Valor (Dependente)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input class="inputsDependente" type="text" name="descricao_patrimonio_dependente[]" required></td>
+            <td><input class="inputsDependente" type="text" name="valor_patrimonio_dependente[]" required></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Botão para adicionar mais linhas no patrimônio do dependente -->
+      <button class="buttonAdicionarDependente" type="button" onclick="adicionarLinhaDependente()">Adicionar Linha
+        (Dependente)</button>
+    </div>
+
+    <div class="divCheckBox">
+      <input type="checkbox" id="confirm_information" name="confirm_information" required>
+      <label class="labelCheckBox" for="confirm_information">Confirmo que as informações acima estão corretas:</label>
+    </div>
+    <br><br>
+
+    <input type="submit" value="Criar">
+  </form>
+
+  <script>
+    function adicionarLinha() {
+      var table = document.getElementById("patrimonio_table").getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      cell1.innerHTML = '<input class="inputsPatrimonioTitular" type="text" name="descricao_patrimonio[]" required>';
+
+      var cell2 = newRow.insertCell(1);
+      cell2.innerHTML = '<input class="inputsPatrimonioTitular" type="text" name="valor_patrimonio[]" required>';
+    }
+
+    function adicionarLinhaConjuge() {
+      var table = document.getElementById("conjuge_table").getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      cell1.innerHTML = '<input class="inputsConjuge" type="text" name="descricao_patrimonio_conjuge[]" required>';
+
+      var cell2 = newRow.insertCell(1);
+      cell2.innerHTML = '<input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required>';
+
+    }
+
+    function exibirConjugeForm() {
+      document.getElementById("conjuge_form").style.display = "block";
+    }
+
+    function esconderConjugeForm() {
+      document.getElementById("conjuge_form").style.display = "none";
+    }
+
+    function adicionarLinhaDependente() {
+      var table = document.getElementById("dependente_table").getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      cell1.innerHTML = '<input class="inputsDependente" type="text" name="descricao_patrimonio_dependente[]" required>';
+
+      var cell2 = newRow.insertCell(1);
+      cell2.innerHTML = '<input class="inputsDependente" type="text" name="valor_patrimonio_dependente[]" required>';
+    }
+  </script>
+
+</body>
+
+</html>
