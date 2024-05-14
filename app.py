@@ -24,7 +24,7 @@ class Patrimonio(db.Model):
 @app.route("/")
 def index():
     funcionarios = Funcionario.query.all()
-    return render_template("index.html", funcionarios=funcionarios)
+    return render_template("Index/index.html", funcionarios=funcionarios)
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
@@ -48,7 +48,7 @@ def create():
 
         db.session.commit()
         return redirect(url_for("index"))
-    return render_template("create.html")
+    return render_template("Create/create.html")
 
 @app.route("/update/<int:id>", methods=["GET", "POST"])
 def update(id):
@@ -62,7 +62,7 @@ def update(id):
         funcionario.endereco_cep = request.form["endereco_cep"]
         db.session.commit()
         return redirect(url_for("index"))
-    return render_template("update.html", funcionario=funcionario)
+    return render_template("Update/update.html", funcionario=funcionario)
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -73,7 +73,7 @@ def delete(id):
 
 @app.route("/nao_possui_bens")
 def nao_possui_bens():
-    return render_template("nao_possui_bens.html")
+    return render_template("NaoPossui/nao_possui_bens.html")
 
 
 if __name__ == "__main__":

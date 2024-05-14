@@ -24,7 +24,7 @@
       width: 100%;
     }
 
-    .radio-group{
+    .radio-group {
       margin-top: -1rem;
     }
 
@@ -38,7 +38,7 @@
       width: 100%;
     }
 
-    
+
     .divNomeCargo {
       display: flex;
       align-items: center;
@@ -58,6 +58,7 @@
 
       width: 100%;
     }
+
     .divRuaCep {
       display: flex;
       align-items: center;
@@ -164,6 +165,7 @@
     button:hover {
       background-color: #5b88a5;
     }
+
     .buttonAdicionarConjuge,
     .buttonAdicionarDependente {
       position: relative;
@@ -188,39 +190,87 @@
       /* Cor verde mais escura no hover */
     }
 
-    .divCheckBox{
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .buttonTermos {
+      border: none;
+      border-radius: 10px;
 
-      gap: .2rem;
       margin-top: 1rem;
 
-      width: 100%;
-
+      height: 2rem;
+      background-color: #007bff;
+      color: white;
     }
 
-    .labelCheckBox{
-      margin-top: 0rem;
+    /* Estilo para o modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+
+      display: flex;
+      align-self: flex-end;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .buttonCriar{
+      border: none;
+      border-radius: 10px;
+
+      margin-top: 1rem;
+
+      height: 2rem;
+      width: 20%;
+
+      background-color: #007bff;
+      color: white;
     }
   </style>
 </head>
 
 <body>
   <h1>Declaração de Bens</h1>
-  <form action="" method="post" class="formInputs">
-
+  <form id="declaracaoForm" action="" method="post" class="formInputs">
     <div class="divNomeCargo">
       <div>
         <label for="nome-completo">Nome Completo:</label>
         <input class="inputsTitular" type="text" id="nome-completo" name="nome-completo" required>
       </div>
-
       <div>
         <label for="cargo_publico">Cargo/Emprego Público:</label>
         <input class="inputsTitular" type="text" id="cargo_publico" name="cargo_publico" required>
       </div>
-
     </div>
 
     <div class="divRgCPF">
@@ -228,7 +278,6 @@
         <label for="rg">RG:</label>
         <input type="text" id="rg" name="rg" class="inputsTitular" required>
       </div>
-
       <div>
         <label for="cpf">CPF:</label>
         <input type="text" id="cpf" name="cpf" class="inputsTitular" required>
@@ -240,14 +289,12 @@
         <label for="endereco_rua">Endereço (Rua):</label>
         <input type="text" id="endereco_rua" name="endereco_rua" class="inputsTitular" required>
       </div>
-
       <div>
         <label for="endereco_cep">Endereço (CEP):</label>
         <input type="text" id="endereco_cep" name="endereco_cep" class="inputsTitular" required>
       </div>
     </div>
 
-    <!-- Tabela para Descrição do Patrimônio e Valor -->
     <table id="patrimonio_table" class="descricao_patrimonio">
       <thead>
         <tr>
@@ -262,29 +309,25 @@
         </tr>
       </tbody>
     </table>
-    <!-- Botão para adicionar mais linhas -->
-    <button type="button" onclick="adicionarLinha()">Adicionar Linha</button>
 
+    <button type="button" onclick="adicionarLinha()">Adicionar Linha</button>
     <br><br>
 
-    <!-- Radio button para perguntar se possui cônjuge -->
     <div class="radio-group" style="display: flex; align-items: center;">
       <label for="possui_conjuge" style="margin-right: 10px;">Possui cônjuge?</label>
-      <input class="" type="radio" id="possui_conjuge_sim" name="possui_conjuge" value="sim" onclick="exibirConjugeForm()"
-        style="margin-right: 10px;">
+      <input class="" type="radio" id="possui_conjuge_sim" name="possui_conjuge" value="sim"
+        onclick="exibirConjugeForm()" style="margin-right: 10px;">
       <label for="possui_conjuge_sim">Sim</label>
       <input type="radio" id="possui_conjuge_nao" name="possui_conjuge" value="nao" onclick="esconderConjugeForm()">
       <label for="possui_conjuge_nao">Não</label>
     </div>
 
-    <!-- Div para conter o formulário do cônjuge -->
     <div id="conjuge_form" style="display: none;">
       <label for="nome_conjuge">Nome do cônjuge:</label>
       <input class="inputsDadosConjuge" type="text" id="nome_conjuge" name="nome_conjuge"><br><br>
       <label for="rg_conjuge">RG do cônjuge:</label>
       <input class="inputsDadosConjuge" type="text" id="rg_conjuge" name="rg_conjuge"><br><br>
 
-      <!-- Tabela para Descrição do Patrimônio e Valor do cônjuge -->
       <table id="conjuge_table">
         <thead>
           <tr>
@@ -300,14 +343,12 @@
         </tbody>
       </table>
 
-      <!-- Botão para adicionar mais linhas no patrimônio do cônjuge -->
       <button class="buttonAdicionarConjuge" type="button" onclick="adicionarLinhaConjuge()">Adicionar Linha
         (Cônjuge)</button>
     </div>
 
     <br><br>
 
-    <!-- Radio button para perguntar se possui filhos/dependente econômico -->
     <div class="radio-group" style="display: flex; align-items: center;">
       <label for="possui_dependente" style="margin-right: 10px;">Possui filhos/dependente econômico?</label>
       <input type="radio" id="possui_dependente_sim" name="possui_dependente" value="sim"
@@ -318,14 +359,12 @@
       <label for="possui_dependente_nao">Não</label>
     </div>
 
-    <!-- Div para conter o formulário do dependente -->
     <div id="dependente_form" style="display: none;">
       <label for="nome_dependente">Nome do dependente:</label>
       <input class="inputsDadosDependente" type="text" id="nome_dependente" name="nome_dependente"><br><br>
       <label for="rg_dependente">RG do dependente:</label>
       <input class="inputsDadosDependente" type="text" id="rg_dependente" name="rg_dependente"><br><br>
 
-      <!-- Tabela para Descrição do Patrimônio e Valor do dependente -->
       <table id="dependente_table">
         <thead>
           <tr>
@@ -341,28 +380,29 @@
         </tbody>
       </table>
 
-      <!-- Botão para adicionar mais linhas no patrimônio do dependente -->
       <button class="buttonAdicionarDependente" type="button" onclick="adicionarLinhaDependente()">Adicionar Linha
         (Dependente)</button>
     </div>
 
-    <div class="divCheckBox">
-      <input type="checkbox" id="confirm_information" name="confirm_information" required>
-      <label class="labelCheckBox" for="confirm_information">Confirmo que as informações acima estão corretas:</label>
+    <!-- The Modal -->
+    <div id="termosModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="document.getElementById('termosModal').style.display='none'">×</span>
+        <h2>Termos e Condições</h2>
+        <p>Insira os termos e condições aqui. O usuário deve concordar com estes termos antes de prosseguir.</p>
+        <button class="buttonTermos" onclick="aceitarTermos()">Aceito os termos</button>
+      </div>
     </div>
+
     <br><br>
-
-    <input type="submit" value="Criar">
+    <input class="buttonCriar" type="button" value="Criar" onclick="abrirModal()">
   </form>
-
   <script>
     function adicionarLinha() {
       var table = document.getElementById("patrimonio_table").getElementsByTagName('tbody')[0];
       var newRow = table.insertRow(table.rows.length);
-
       var cell1 = newRow.insertCell(0);
       cell1.innerHTML = '<input class="inputsPatrimonioTitular" type="text" name="descricao_patrimonio[]" required>';
-
       var cell2 = newRow.insertCell(1);
       cell2.innerHTML = '<input class="inputsPatrimonioTitular" type="text" name="valor_patrimonio[]" required>';
     }
@@ -370,13 +410,10 @@
     function adicionarLinhaConjuge() {
       var table = document.getElementById("conjuge_table").getElementsByTagName('tbody')[0];
       var newRow = table.insertRow(table.rows.length);
-
       var cell1 = newRow.insertCell(0);
       cell1.innerHTML = '<input class="inputsConjuge" type="text" name="descricao_patrimonio_conjuge[]" required>';
-
       var cell2 = newRow.insertCell(1);
       cell2.innerHTML = '<input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required>';
-
     }
 
     function exibirConjugeForm() {
@@ -390,15 +427,39 @@
     function adicionarLinhaDependente() {
       var table = document.getElementById("dependente_table").getElementsByTagName('tbody')[0];
       var newRow = table.insertRow(table.rows.length);
-
       var cell1 = newRow.insertCell(0);
       cell1.innerHTML = '<input class="inputsDependente" type="text" name="descricao_patrimonio_dependente[]" required>';
-
       var cell2 = newRow.insertCell(1);
       cell2.innerHTML = '<input class="inputsDependente" type="text" name="valor_patrimonio_dependente[]" required>';
     }
-  </script>
 
+    // Função para abrir o modal
+    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Impede o submit padrão
+      document.getElementById('termosModal').style.display = 'block';
+    });
+
+    // Função para fechar o modal e marcar a caixa de seleção
+    function aceitarTermos() {
+      document.getElementById('termosModal').style.display = 'none';
+      document.getElementById('declaracaoForm').submit(); // Submete o formulário
+    }
+
+    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Impede o submit padrão
+
+      document.getElementById('termosModal').style.display = 'block';
+    });
+
+    function abrirModal() {
+      document.getElementById('termosModal').style.display = 'block';
+    }
+
+    function aceitarTermos() {
+      document.getElementById('termosModal').style.display = 'none';
+      document.getElementById('declaracaoForm').submit(); // Submete o formulário
+    }
+  </script>
 </body>
 
 </html>

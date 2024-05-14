@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Criar Funcionário</title>
   <style>
-
     body {
       font-family: Arial, sans-serif;
     }
-
     h1 {
       text-align: center;
     }
-
     form {
       width: 400px;
       margin: 0 auto;
     }
-
     label {
       display: block;
       margin-bottom: .3rem;
     }
-
     input[type="text"],
-    input[type="submit"] {
+    input[type="button"] { /* Mudança aqui: input[type="button"] */
       width: 100%;
       margin-bottom: 10px;
       padding: 10px;
@@ -32,147 +26,178 @@
       border-radius: 5px;
       transition: border-color 0.3s;
       font-family: Arial, sans-serif;
-
       width: 100%;
     }
-
     input[type="text"]:focus {
       border-color: #007bff;
       outline: none;
-
     }
-
-    input[type="submit"] {
+    input[type="button"] { /* Mudança aqui: input[type="button"] */
       background-color: #007bff;
       color: #fff;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
-
       margin-top: 1.5rem;
       width: 20%;
     }
-
-    input[type="submit"]:hover {
+    input[type="button"]:hover { /* Mudança aqui: input[type="button"] */
       background-color: #0056b3;
     }
-
     .divCheckBox {
       display: flex;
       align-items: center;
       justify-content: center;
-
       gap: .2rem;
-
       width: 100%;
     }
-
     .divRuaCep {
       display: flex;
       align-items: center;
       justify-content: center;
-
       gap: 2rem;
-
       width: 100%;
     }
-
     .divNomeCargo {
       display: flex;
       align-items: center;
       justify-content: center;
-
       gap: 2rem;
-
       width: 100%;
-
     }
-
     .divRgCPF {
       display: flex;
       align-items: center;
       justify-content: center;
-
       gap: 2rem;
-
       width: 100%;
-
     }
-
-    .divCheckBox{
+    .divCheckBox {
       display: flex;
       align-items: center;
       justify-content: center;
-
       gap: .2rem;
       margin-top: 2rem;
-
       width: 100%;
     }
-
     .labelCheckBox {
       margin-bottom: 0rem;
     }
-
-    .formInputs{
+    .formInputs {
       width: 100%;
-
       display: flex;
       flex-direction: column;
       align-items: center;
     }
+    /* Estilo para o modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      align-self: flex-end;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
+    .buttonTermos{
+      border: none;
+      border-radius: 10px;
+
+      margin-top: 1rem;
+
+      height: 2rem;
+      background-color: #007bff;
+      color: white;
+    }
   </style>
 </head>
-
 <body>
   <h1>Declaração de bens</h1>
-  <form class="formInputs" action="" method="post">
-
+  <form id="declaracaoForm" class="formInputs" action="" method="post">
+    
     <div class="divNomeCargo">
       <div>
         <label for="nome_completo">Nome Completo:</label>
         <input class="inputs" type="text" id="nome_completo" name="nome_completo" required>
       </div>
-
       <div>
         <label for="rg">RG:</label>
         <input class="inputs" type="text" id="rg" name="rg" required>
       </div>
     </div>
-
     <div class="divRgCPF">
       <div>
         <label for="cpf">CPF:</label>
         <input class="inputs" type="text" id="cpf" name="cpf" required>
       </div>
-
       <div>
         <label for="cargo_publico">Cargo Público:</label>
         <input class="inputs" type="text" id="cargo_publico" name="cargo_publico" required>
       </div>
     </div>
-
     <div class="divRuaCep">
       <div>
         <label for="endereco_rua">Endereço (Rua):</label>
         <input class="inputs" type="text" id="endereco_rua" name="endereco_rua" required>
       </div>
-
       <div>
         <label for="endereco_cep">Endereço (CEP):</label>
         <input class="inputs" type="text" id="endereco_cep" name="endereco_cep">
       </div>
     </div>
+   
+    <input type="button" value="Criar" onclick="abrirModal()"> 
 
-    <div class="divCheckBox">
-      <input type="checkbox" id="confirm_information" name="confirm_information" required>
-      <label class="labelCheckBox" for="confirm_information">Confirmo que as informações acima estão corretas:</label>
+    
+    <div id="termosModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="document.getElementById('termosModal').style.display='none'">×</span>
+        <h2>Termos e Condições</h2>
+        <p>Insira os termos e condições aqui. O usuário deve concordar com estes termos antes de prosseguir.</p>
+        <button class="buttonTermos" onclick="aceitarTermos()">Aceito os termos</button>
+      </div>
     </div>
-
-    <input class="inputCriar" type="submit" value="Criar">
   </form>
-</body>
 
+  <script>
+   
+    function abrirModal() {
+      document.getElementById('termosModal').style.display = 'block';
+    }
+
+    function aceitarTermos() {
+      document.getElementById('termosModal').style.display = 'none';
+      document.getElementById('declaracaoForm').submit();
+    }
+  </script>
+</body>
 </html>
