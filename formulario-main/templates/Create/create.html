@@ -3,7 +3,6 @@
 
 <head>
   <title>Declaração de Bens</title>
-  <link rel="stylesheet" href="./create.css">
 
   <style>
     body {
@@ -265,7 +264,7 @@
     <div class="divNomeCargo">
       <div>
         <label for="nome-completo">Nome Completo:</label>
-        <input class="inputsTitular" type="text" id="nome-completo" name="nome-completo" required>
+        <input class="inputsTitular" type="text" id="nome_completo" name="nome_completo" required>
       </div>
       <div>
         <label for="cargo_publico">Cargo/Emprego Público:</label>
@@ -338,7 +337,7 @@
         <tbody>
           <tr>
             <td><input class="inputsConjuge" type="text" name="descricao_patrimonio_conjuge[]" required></td>
-            <td><input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required></td>
+            <td><input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required></td>]
           </tr>
         </tbody>
       </table>
@@ -455,10 +454,7 @@
       document.getElementById('termosModal').style.display = 'block';
     }
 
-    function aceitarTermos() {
-      document.getElementById('termosModal').style.display = 'none';
-      document.getElementById('declaracaoForm').submit(); // Submete o formulário
-    }
+  
   </script>
 </body>
 
