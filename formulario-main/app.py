@@ -154,6 +154,7 @@ def update(id):
         return redirect(url_for("index"))
     return render_template("Update/update.html", funcionario=funcionario)
 
+
 @app.route("/delete/<int:id>")
 def delete(id):
     funcionario = Funcionario.query.get(id)
@@ -164,6 +165,10 @@ def delete(id):
 @app.route("/nao_possui_bens")
 def nao_possui_bens():
     return render_template("NaoPossui/nao_possui_bens.html")
+
+@app.route("/confirmacao")
+def confirmacao():
+    return render_template("Confirmacao/confirmacao.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

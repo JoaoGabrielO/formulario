@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Declaração de Bens - Confirmação</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      margin: 3rem auto;
+      width: 80%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Declaração de Bens - Confirmação</h1>
+  <div class="container" id="confirmacao">
+    </div>
+
+  <script>
+    // Obtém os dados do formulário da página anterior (se estiver usando localStorage)
+    const formData = JSON.parse(localStorage.getItem('formData'));
+
+    // Verifica se há dados no localStorage
+    if (formData) {
+      // Exibe os dados do titular
+      let html = `<h2>Titular</h2>
+                  <p><strong>Nome:</strong> ${formData.nome_completo}</p>
+                  <p><strong>Cargo/Emprego Público:</strong> ${formData.cargo_publico}</p>
+                  <p><strong>RG:</strong> ${formData.rg}</p>
+                  <p><strong>CPF:</strong> ${formData.cpf}</p>
+                  <p><strong>Endereço:</strong> ${formData.endereco_rua}, CEP: ${formData.endereco_cep}</p>`;
+
+      // Exibe os dados do patrimônio do titular
+      html += `<h2>Patrimônio do Titular</h2>`;
+      if (formData.descricao_patrimonio.length > 0) {
+        html += `<table>
+                  <thead>
+                    <tr>
+                      <th>Descrição</th>
+                      <th>Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>`;
+        for (let i = 0; i < formData.descricao_patrimonio.length; i++) {
+          html += `<tr>
+                      <td>${formData.descricao_patrimonio[i]}</td>
+                      <td>${formData.valor_patrimonio[i]}</td>
+                    </tr>`;
+        }
+        html += `</tbody>
+                </table>`;
+      } else {
+        html += `<p>Nenhum patrimônio declarado.</p>`;
+      }
+
+      // Exibe os dados do cônjuge
+      if (formData.possui_conjuge === 'sim') {
+        html += `<h2>Cônjuge</h2>
+                <p><strong>Nome:</strong> ${formData.nome_conjuge}</p>
+                <p><strong>RG:</strong> ${formData.rg_conjuge}</p>`;
+
+        // Exibe os dados do patrimônio do cônjuge
+        html += `<h2>Patrimônio do Cônjuge</h2>`;
+        if (formData.descricao_patrimonio_conjuge.length > 0) {
+          html += `<table>
+                    <thead>
+                      <tr>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>`;
+          for (let i = 0; i < formData.descricao_patrimonio_conjuge.length; i++) {
+            html += `<tr>
+                        <td>${formData.descricao_patrimonio_conjuge[i]}</td>
+                        <td>${formData.valor_patrimonio_conjuge[i]}</td>
+                      </tr>`;
+          }
+          html += `</tbody>
+                  </table>`;
+        } else {
+          html += `<p>Nenhum patrimônio declarado.</p>`;
+        }
+      }
+
+      // Exibe os dados do dependente
+      if (formData.possui_dependente === 'sim') {
+        html += `<h2>Dependente</h2>
+                <p><strong>Nome:</strong> ${formData.nome_dependente}</p>
+                <p><strong>RG:</strong> ${formData.rg_dependente}</p>`;
+
+        // Exibe os dados do patrimônio do dependente
+        html += `<h2>Patrimônio do Dependente</h2>`;
+        if (formData.descricao_patrimonio_dependente.length > 0) {
+          html += `<table>
+                    <thead>
+                      <tr>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>`;
+          for (let i = 0; i < formData.descricao_patrimonio_dependente.length; i++) {
+            html += `<tr>
+                        <td>${formData.descricao_patrimonio_dependente[i]}</td>
+                        <td>${formData.valor_patrimonio_dependente[i]}</td>
+                      </tr>`;
+          }
+          html += `</tbody>
+                  </table>`;
+        } else {
+          html += `<p>Nenhum patrimônio declarado.</p>`;
+        }
+      }
+
+      // Insere o HTML gerado no elemento "confirmacao"
+      document.getElementById('confirmacao').innerHTML = html;
+    } else {
+      // Se não houver dados no localStorage, exibe uma mensagem
+      document.getElementById('confirmacao').innerHTML = `<p>Nenhum dado de declaração encontrado.</p>`;
+    }
+  </script>
+</body>
+
+</html>
