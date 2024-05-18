@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/formulario"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/formulario_declaracao"
 db = SQLAlchemy(app)
 
 try:
@@ -27,7 +27,7 @@ class Funcionario(db.Model):
 class Patrimonio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     descricao = db.Column(db.String(100), nullable=False)
-    valor = db.Column(db.Float, nullable=False)
+    valor = db.Column(db.Float, nullable=False, default=0.0) # Define 0.0 como padrão
     funcionario_id = db.Column(db.Integer, db.ForeignKey('funcionario.id'), nullable=False)
 
 class Conjugue(db.Model):
@@ -73,12 +73,13 @@ def create():
             endereco_cep=request.form["endereco_cep"]
         )
         db.session.add(funcionario)
+        db.session.flush()  # Faz o banco de dados gerar o ID do funcionário
 
         if request.form.get("nome_conjuge"):
             conjugue = Conjugue(
                 nome=request.form["nome_conjuge"],
                 rg=request.form["rg_conjuge"],
-                funcionario_id=funcionario.id
+                funcionario_id=funcionario.id  # Associa o ID do funcionário
             )
             db.session.add(conjugue)
         
@@ -92,7 +93,7 @@ def create():
             dependente = Dependente(
                 nome=request.form["nome_dependente"],
                 rg=request.form["rg_dependente"],
-                funcionario_id=funcionario.id
+                funcionario_id=funcionario.id  # Associa o ID do funcionário
             )
             db.session.add(dependente)
         
@@ -162,12 +163,25 @@ def delete(id):
     db.session.commit()
     return redirect(url_for("index"))
 
-@app.route("/nao_possui_bens")
+@app.route("/nao_possui_bens", methods=["GET", "POST"])
 def nao_possui_bens():
-    return render_template("NaoPossui/nao_possui_bens.html")
+    if request.method == "POST":
+        funcionario = Funcionario(
+            nome_completo=request.form["nome_completo"],
+            rg=request.form["rg"],
+            cpf=request.form["cpf"],
+            cargo_publico=request.form["cargo_publico"],
+            endereco_rua=request.form["endereco_rua"],
+            endereco_cep=request.form["endereco_cep"]
+        )
+        db.session.add(funcionario)
+        db.session.commit()
+        return redirect(url_for("confirmacao")) 
+    else:  # Indentação correta do else
+        return render_template("NaoPossui/nao_possui_bens.html")
 
 @app.route("/confirmacao")
-def confirmacao():
+def confirmacao():  
     return render_template("Confirmacao/confirmacao.html")
 
 if __name__ == "__main__":

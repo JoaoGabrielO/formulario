@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Criar Funcionário</title>
   <style>
     body {
       font-family: Arial, sans-serif;
     }
+
     h1 {
       text-align: center;
     }
+
     form {
       width: 400px;
       margin: 0 auto;
     }
+
     label {
       display: block;
       margin-bottom: .3rem;
     }
+
     input[type="text"],
-    input[type="button"] { /* Mudança aqui: input[type="button"] */
+    input[type="button"] {
+      /* Mudança aqui: input[type="button"] */
       width: 100%;
       margin-bottom: 10px;
       padding: 10px;
@@ -28,11 +34,14 @@
       font-family: Arial, sans-serif;
       width: 100%;
     }
+
     input[type="text"]:focus {
       border-color: #007bff;
       outline: none;
     }
-    input[type="button"] { /* Mudança aqui: input[type="button"] */
+
+    input[type="button"] {
+      /* Mudança aqui: input[type="button"] */
       background-color: #007bff;
       color: #fff;
       border: none;
@@ -42,9 +51,12 @@
       margin-top: 1.5rem;
       width: 20%;
     }
-    input[type="button"]:hover { /* Mudança aqui: input[type="button"] */
+
+    input[type="button"]:hover {
+      /* Mudança aqui: input[type="button"] */
       background-color: #0056b3;
     }
+
     .divCheckBox {
       display: flex;
       align-items: center;
@@ -52,6 +64,7 @@
       gap: .2rem;
       width: 100%;
     }
+
     .divRuaCep {
       display: flex;
       align-items: center;
@@ -59,6 +72,7 @@
       gap: 2rem;
       width: 100%;
     }
+
     .divNomeCargo {
       display: flex;
       align-items: center;
@@ -66,6 +80,7 @@
       gap: 2rem;
       width: 100%;
     }
+
     .divRgCPF {
       display: flex;
       align-items: center;
@@ -73,6 +88,7 @@
       gap: 2rem;
       width: 100%;
     }
+
     .divCheckBox {
       display: flex;
       align-items: center;
@@ -81,15 +97,18 @@
       margin-top: 2rem;
       width: 100%;
     }
+
     .labelCheckBox {
       margin-bottom: 0rem;
     }
+
     .formInputs {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
+
     /* Estilo para o modal */
     .modal {
       display: none;
@@ -102,6 +121,7 @@
       overflow: auto;
       background-color: rgba(0, 0, 0, 0.4);
     }
+
     .modal-content {
       background-color: #fefefe;
       margin: 15% auto;
@@ -113,6 +133,7 @@
       flex-direction: column;
       justify-content: center;
     }
+
     .close {
       color: #aaa;
       float: right;
@@ -121,6 +142,7 @@
       display: flex;
       align-self: flex-end;
     }
+
     .close:hover,
     .close:focus {
       color: black;
@@ -128,7 +150,7 @@
       cursor: pointer;
     }
 
-    .buttonTermos{
+    .buttonTermos {
       border: none;
       border-radius: 10px;
 
@@ -140,10 +162,11 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Declaração de bens</h1>
   <form id="declaracaoForm" class="formInputs" action="" method="post">
-    
+
     <div class="divNomeCargo">
       <div>
         <label for="nome_completo">Nome Completo:</label>
@@ -174,10 +197,10 @@
         <input class="inputs" type="text" id="endereco_cep" name="endereco_cep">
       </div>
     </div>
-   
-    <input type="button" value="Criar" onclick="abrirModal()"> 
 
-    
+    <input type="button" value="Criar" onclick="abrirModal()">
+
+
     <div id="termosModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="document.getElementById('termosModal').style.display='none'">×</span>
@@ -189,15 +212,30 @@
   </form>
 
   <script>
-   
+
+    // Função para abrir o modal
+    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Impede o submit padrão
+      document.getElementById('termosModal').style.display = 'block';
+    });
+
+    // Função para fechar o modal e marcar a caixa de seleção
+    function aceitarTermos() {
+      document.getElementById('termosModal').style.display = 'none';
+      document.getElementById('declaracaoForm').submit(); // Submete o formulário
+    }
+
+    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Impede o submit padrão
+
+      document.getElementById('termosModal').style.display = 'block';
+    });
+
     function abrirModal() {
       document.getElementById('termosModal').style.display = 'block';
     }
 
-    function aceitarTermos() {
-      document.getElementById('termosModal').style.display = 'none';
-      document.getElementById('declaracaoForm').submit();
-    }
   </script>
 </body>
+
 </html>
