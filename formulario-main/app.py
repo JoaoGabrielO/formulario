@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/formulario_declaracao"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost:3310/formulario_declaracao"
 db = SQLAlchemy(app)
 
 try:
@@ -20,6 +20,8 @@ class Funcionario(db.Model):
     cargo_publico = db.Column(db.String(50), nullable=False)
     endereco_rua = db.Column(db.String(100), nullable=False)
     endereco_cep = db.Column(db.String(20), nullable=False)
+    nome_conjuge = db.Column(db.String(100))
+    rg_conjuge = db.Column(db.String(20))
     patrimonios = db.relationship('Patrimonio', backref='funcionario', lazy=True)
     conjuges = db.relationship('Conjugue', backref='funcionario', lazy=True, uselist=False)
     dependentes = db.relationship('Dependente', backref='funcionario', lazy=True)
@@ -75,11 +77,15 @@ def create():
         db.session.add(funcionario)
         db.session.flush()  # Faz o banco de dados gerar o ID do funcionário
 
-        if request.form.get("nome_conjuge"):
+       # Cônjuge
+        if request.form.get("possui_conjuge") == 'sim':
+            funcionario.nome_conjuge = request.form["nome_conjuge"]
+            funcionario.rg_conjuge = request.form["rg_conjuge"]
+
             conjugue = Conjugue(
                 nome=request.form["nome_conjuge"],
                 rg=request.form["rg_conjuge"],
-                funcionario_id=funcionario.id  # Associa o ID do funcionário
+                funcionario_id=funcionario.id
             )
             db.session.add(conjugue)
         
