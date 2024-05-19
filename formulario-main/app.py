@@ -57,7 +57,7 @@ class PtrDependente(db.Model):
     descricao = db.Column(db.String(100), nullable=False)
     valor = db.Column(db.Float, nullable=False)
     id_ptr_dependente = db.Column(db.Integer, db.ForeignKey('dependente.id'), nullable=False)
-
+    
 @app.route("/")
 def index():
     funcionarios = Funcionario.query.all()
@@ -77,7 +77,7 @@ def create():
         db.session.add(funcionario)
         db.session.flush()  # Faz o banco de dados gerar o ID do funcionário
 
-       # Cônjuge
+        # Cônjuge
         if request.form.get("possui_conjuge") == 'sim':
             funcionario.nome_conjuge = request.form["nome_conjuge"]
             funcionario.rg_conjuge = request.form["rg_conjuge"]
@@ -87,28 +87,43 @@ def create():
                 rg=request.form["rg_conjuge"],
                 funcionario_id=funcionario.id
             )
-            db.session.add(conjugue)
-        
+            db.session.add(conjugue) 
+            db.session.flush() # Garante que o cônjuge tenha um ID
+            
+            # Patrimônios do Cônjuge - AGORA com o ID do cônjuge
             for i in range(len(request.form.getlist("descricao_patrimonio_conjuge[]"))):
                 descricao = request.form.getlist("descricao_patrimonio_conjuge[]")[i]
                 valor = request.form.getlist("valor_patrimonio_conjuge[]")[i]
-                conjugue_patrimonio = PtrConjugue(descricao=descricao, valor=valor, id_ptr_conjugue=conjugue.id)
+
+                conjugue_patrimonio = PtrConjugue(
+                    descricao=descricao,
+                    valor=valor,
+                    id_ptr_conjugue=conjugue.id  
+                )
                 db.session.add(conjugue_patrimonio)
-        
-        if request.form.get("nome_dependente"):
+
+        # Dependente
+        if request.form.get("possui_dependente") == 'sim':
             dependente = Dependente(
                 nome=request.form["nome_dependente"],
                 rg=request.form["rg_dependente"],
-                funcionario_id=funcionario.id  # Associa o ID do funcionário
+                funcionario_id=funcionario.id
             )
             db.session.add(dependente)
-        
+            db.session.flush()  # Garante que o dependente tenha um ID
+            
+             # Patrimônios do Dependente - AGORA com o ID do dependente
             for i in range(len(request.form.getlist("descricao_patrimonio_dependente[]"))):
                 descricao = request.form.getlist("descricao_patrimonio_dependente[]")[i]
                 valor = request.form.getlist("valor_patrimonio_dependente[]")[i]
-                dependente_patrimonio = PtrDependente(descricao=descricao, valor=valor, id_ptr_dependente=dependente.id)
+
+                dependente_patrimonio = PtrDependente(
+                    descricao=descricao,
+                    valor=valor,
+                    id_ptr_dependente=dependente.id  
+                )
                 db.session.add(dependente_patrimonio)
-        
+
         # Salvando os patrimônios associados ao funcionário
         for i in range(len(request.form.getlist("descricao_patrimonio[]"))):
             descricao = request.form.getlist("descricao_patrimonio[]")[i]
