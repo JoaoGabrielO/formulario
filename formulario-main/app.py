@@ -1,8 +1,9 @@
+import uuid
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost:3310/formulario_declaracao"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/formulario_declaracao"
 db = SQLAlchemy(app)
 
 try:
@@ -25,6 +26,7 @@ class Funcionario(db.Model):
     patrimonios = db.relationship('Patrimonio', backref='funcionario', lazy=True)
     conjuges = db.relationship('Conjugue', backref='funcionario', lazy=True, uselist=False)
     dependentes = db.relationship('Dependente', backref='funcionario', lazy=True)
+    protocolo = db.Column(db.String(36), unique=True, nullable=False, default=lambda: str(uuid.uuid4())) 
 
 class Patrimonio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,8 +74,13 @@ def create():
             cpf=request.form["cpf"],
             cargo_publico=request.form["cargo_publico"],
             endereco_rua=request.form["endereco_rua"],
-            endereco_cep=request.form["endereco_cep"]
+            endereco_cep=request.form["endereco_cep"],
         )
+
+        protocolo_uuid = uuid.uuid4()
+        protocolo_base64 = protocolo_uuid.bytes.hex() 
+        funcionario.protocolo = protocolo_base64 
+        
         db.session.add(funcionario)
         db.session.flush()  # Faz o banco de dados gerar o ID do funcionário
 
@@ -132,7 +139,7 @@ def create():
             db.session.add(patrimonio)
 
         db.session.commit()
-        return redirect(url_for("index"))
+        return redirect(url_for("show_funcionario", funcionario_id=funcionario.id))
     return render_template("Create/create.html")
 
 @app.route("/update/<int:id>", methods=["GET", "POST"])
@@ -196,14 +203,20 @@ def nao_possui_bens():
             endereco_cep=request.form["endereco_cep"]
         )
         db.session.add(funcionario)
-        db.session.commit()
-        return redirect(url_for("confirmacao")) 
-    else:  # Indentação correta do else
+        db.session.commit()  # Confirma a adição do funcionário
+        
+        # Obtem o ID do funcionário recém-criado
+        funcionario_id = funcionario.id 
+        
+        return redirect(url_for("show_funcionario", funcionario_id=funcionario_id)) 
+    else:  
         return render_template("NaoPossui/nao_possui_bens.html")
 
-@app.route("/confirmacao")
-def confirmacao():  
-    return render_template("Confirmacao/confirmacao.html")
+@app.route("/funcionario/<int:funcionario_id>")
+def show_funcionario(funcionario_id):
+    funcionario = Funcionario.query.get_or_404(funcionario_id)
+    return render_template("Show/show_funcionario.html", funcionario=funcionario)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

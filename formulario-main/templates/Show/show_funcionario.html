@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados do Funcionário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Dados do Funcionário</h1>
+
+    <table>
+        <tr>
+            <th>Campo</th>
+            <th>Valor</th>
+        </tr>
+        <tr>
+            <td>Nome Completo</td>
+            <td>{{ funcionario.nome_completo }}</td>
+        </tr>
+        <tr>
+            <td>RG</td>
+            <td>{{ funcionario.rg }}</td>
+        </tr>
+        <tr>
+            <td>CPF</td>
+            <td>{{ funcionario.cpf }}</td>
+        </tr>
+        <!-- Adicione os outros campos do funcionário conforme necessário -->
+        <tr>
+            <td>Protocolo</td>
+            <td>{{ funcionario.protocolo }}</td>
+        </tr>
+    </table>
+
+    <h2>Cônjuge</h2>
+    {% if funcionario.conjuges %}
+    <p>Nome: {{ funcionario.conjuges.nome }}</p>
+    <p>RG: {{ funcionario.conjuges.rg }}</p>
+    <h3>Patrimônios do Cônjuge</h3>
+    <ul>
+        {% for patrimonio in funcionario.conjuges.patrimonios %}
+        <li>Descrição: {{ patrimonio.descricao }} - Valor: R$ {{ patrimonio.valor }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Nenhum cônjuge registrado.</p>
+    {% endif %}
+
+    <h3>Patrimônios do Cônjuge</h3>
+    <ul>
+        {% for patrimonio in funcionario.conjuges.patrimonios %}
+        <li>Descrição: {{ patrimonio.descricao }} - Valor: R$ {{ patrimonio.valor }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Dependentes</h2>
+    {% if funcionario.dependentes %}
+    <table>
+        <tr>
+            <th colspan="2">Dependentes</th>
+        </tr>
+        {% for dependente in funcionario.dependentes %}
+        <tr>
+            <th>Nome</th>
+            <td>{{ dependente.nome }}</td>
+        </tr>
+        <tr>
+            <th>RG</th>
+            <td>{{ dependente.rg }}</td>
+        </tr>
+        <tr>
+            <th colspan="2">Patrimônios do Dependente</th>
+        </tr>
+        {% for patrimonio in dependente.patrimonios %}
+        <tr>
+            <td>Descrição</td>
+            <td>{{ patrimonio.descricao }}</td>
+        </tr>
+        <tr>
+            <td>Valor</td>
+            <td>R$ {{ patrimonio.valor }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>Nenhum dependente registrado.</p>
+    {% endif %}
+
+    <h2>Patrimônios do Funcionário</h2>
+    <table>
+        <tr>
+            <th>Descrição</th>
+            <th>Valor</th>
+        </tr>
+        {% for patrimonio in funcionario.patrimonios %}
+        <tr>
+            <td>{{ patrimonio.descricao }}</td>
+            <td>R$ {{ patrimonio.valor }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>
