@@ -243,17 +243,30 @@
       cursor: pointer;
     }
 
-    .buttonCriar{
+    .buttonCriar {
       border: none;
       border-radius: 10px;
 
-      margin-top: 1rem;
+      margin-top: .5rem;
 
       height: 2rem;
       width: 20%;
 
       background-color: #007bff;
       color: white;
+    }
+
+    .labelDependentes {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+    }
+
+    .labelConjugue {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
     }
   </style>
 </head>
@@ -263,7 +276,7 @@
   <form id="declaracaoForm" action="" method="post" class="formInputs">
     <div class="divNomeCargo">
       <div>
-        <label for="nome-completo">Nome Completo:</label>
+        <label for="nome_completo">Nome Completo:</label>
         <input class="inputsTitular" type="text" id="nome_completo" name="nome_completo" required>
       </div>
       <div>
@@ -313,19 +326,22 @@
     <br><br>
 
     <div class="radio-group" style="display: flex; align-items: center;">
-      <label for="possui_conjuge" style="margin-right: 10px;">Possui cônjuge?</label>
-      <input class="" type="radio" id="possui_conjuge_sim" name="possui_conjuge" value="sim"
-        onclick="exibirConjugeForm()" style="margin-right: 10px;">
-      <label for="possui_conjuge_sim">Sim</label>
-      <input type="radio" id="possui_conjuge_nao" name="possui_conjuge" value="nao" onclick="esconderConjugeForm()">
-      <label for="possui_conjuge_nao">Não</label>
+      <label class="labelConjugue">Possui cônjuge?
+
+        <input class="" type="radio" id="possui_conjuge_sim" name="possui_conjuge" value="sim"
+          onclick="exibirConjugeForm()" style="margin-right: 10px;">
+        <label for="possui_conjuge_sim">Sim</label>
+
+        <input type="radio" id="possui_conjuge_nao" name="possui_conjuge" value="nao" onclick="esconderConjugeForm()">
+        <label for="possui_conjuge_nao">Não</label>
+      </label>
     </div>
 
     <div id="conjuge_form" style="display: none;">
       <label for="nome_conjuge">Nome do cônjuge:</label>
-      <input class="inputsDadosConjuge" type="text" id="nome_conjuge" name="nome_conjuge"><br><br>
+      <input class="inputsDadosConjuge" type="text" id="nome_conjuge" name="nome_conjuge" required><br><br>
       <label for="rg_conjuge">RG do cônjuge:</label>
-      <input class="inputsDadosConjuge" type="text" id="rg_conjuge" name="rg_conjuge"><br><br>
+      <input class="inputsDadosConjuge" type="text" id="rg_conjuge" name="rg_conjuge" required><br><br>
 
       <table id="conjuge_table">
         <thead>
@@ -337,7 +353,7 @@
         <tbody>
           <tr>
             <td><input class="inputsConjuge" type="text" name="descricao_patrimonio_conjuge[]" required></td>
-            <td><input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required></td>]
+            <td><input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required></td>
           </tr>
         </tbody>
       </table>
@@ -349,20 +365,22 @@
     <br><br>
 
     <div class="radio-group" style="display: flex; align-items: center;">
-      <label for="possui_dependente" style="margin-right: 10px;">Possui filhos/dependente econômico?</label>
-      <input type="radio" id="possui_dependente_sim" name="possui_dependente" value="sim"
-        onclick="document.getElementById('dependente_form').style.display = 'block';" style="margin-right: 10px;">
-      <label for="possui_dependente_sim">Sim</label>
-      <input type="radio" id="possui_dependente_nao" name="possui_dependente" value="nao"
-        onclick="document.getElementById('dependente_form').style.display = 'none';">
-      <label for="possui_dependente_nao">Não</label>
+      <label class="labelDependentes">Possui filhos/dependente econômico?
+        <input type="radio" id="possui_dependente_sim" name="possui_dependente" value="sim"
+          onclick="document.getElementById('dependente_form').style.display = 'block';" style="margin-right: 10px;">
+        <label for="possui_dependente_sim">Sim</label>
+
+        <input type="radio" id="possui_dependente_nao" name="possui_dependente" value="nao"
+          onclick="document.getElementById('dependente_form').style.display = 'none';">
+        <label for="possui_dependente_nao">Não</label>
+      </label>
     </div>
 
     <div id="dependente_form" style="display: none;">
       <label for="nome_dependente">Nome do dependente:</label>
-      <input class="inputsDadosDependente" type="text" id="nome_dependente" name="nome_dependente"><br><br>
+      <input class="inputsDadosDependente" type="text" id="nome_dependente" name="nome_dependente" required><br><br>
       <label for="rg_dependente">RG do dependente:</label>
-      <input class="inputsDadosDependente" type="text" id="rg_dependente" name="rg_dependente"><br><br>
+      <input class="inputsDadosDependente" type="text" id="rg_dependente" name="rg_dependente" required><br><br>
 
       <table id="dependente_table">
         <thead>
@@ -396,7 +414,9 @@
     <br><br>
     <input class="buttonCriar" type="button" value="Criar" onclick="abrirModal()">
   </form>
+
   <script>
+    // Função para adicionar linha na tabela de patrimônio do titular
     function adicionarLinha() {
       var table = document.getElementById("patrimonio_table").getElementsByTagName('tbody')[0];
       var newRow = table.insertRow(table.rows.length);
@@ -406,6 +426,7 @@
       cell2.innerHTML = '<input class="inputsPatrimonioTitular" type="text" name="valor_patrimonio[]" required>';
     }
 
+    // Função para adicionar linha na tabela de patrimônio do cônjuge
     function adicionarLinhaConjuge() {
       var table = document.getElementById("conjuge_table").getElementsByTagName('tbody')[0];
       var newRow = table.insertRow(table.rows.length);
@@ -415,14 +436,7 @@
       cell2.innerHTML = '<input class="inputsConjuge" type="text" name="valor_patrimonio_conjuge[]" required>';
     }
 
-    function exibirConjugeForm() {
-      document.getElementById("conjuge_form").style.display = "block";
-    }
-
-    function esconderConjugeForm() {
-      document.getElementById("conjuge_form").style.display = "none";
-    }
-
+    // Função para adicionar linha na tabela de patrimônio do dependente
     function adicionarLinhaDependente() {
       var table = document.getElementById("dependente_table").getElementsByTagName('tbody')[0];
       var newRow = table.insertRow(table.rows.length);
@@ -432,27 +446,124 @@
       cell2.innerHTML = '<input class="inputsDependente" type="text" name="valor_patrimonio_dependente[]" required>';
     }
 
-    // Função para abrir o modal
-    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
-      event.preventDefault(); // Impede o submit padrão
-      document.getElementById('termosModal').style.display = 'block';
-    });
-
-    // Função para fechar o modal e marcar a caixa de seleção
-    function aceitarTermos() {
-      document.getElementById('termosModal').style.display = 'none';
-      document.getElementById('declaracaoForm').submit(); // Submete o formulário
+    // Função para exibir o formulário do cônjuge
+    function exibirConjugeForm() {
+      document.getElementById("conjuge_form").style.display = "block";
     }
 
-    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
-      event.preventDefault(); // Impede o submit padrão
+    // Função para esconder o formulário do cônjuge
+    function esconderConjugeForm() {
+      document.getElementById("conjuge_form").style.display = "none";
+    }
 
-      document.getElementById('termosModal').style.display = 'block';
-    });
-
+    // Função para abrir o modal de termos e condições
     function abrirModal() {
       document.getElementById('termosModal').style.display = 'block';
-    }  
+    }
+
+    // Função para fechar o modal e submeter o formulário
+    function aceitarTermos() {
+      document.getElementById('termosModal').style.display = 'none';
+      document.getElementById('declaracaoForm').submit();
+    }
+
+    // Validação do formulário
+    const form = document.getElementById('declaracaoForm');
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault(); // Impede o envio padrão do formulário
+
+      let isValid = true;
+      let errorMessage = "Por favor, preencha os seguintes campos:\n";
+
+      // Validação dos campos do funcionário
+      if (!form.nome_completo.value) {
+        isValid = false;
+        errorMessage += "- Nome Completo\n";
+      }
+      if (!form.rg.value) {
+        isValid = false;
+        errorMessage += "- RG\n";
+      }
+      if (!form.cpf.value) {
+        isValid = false;
+        errorMessage += "- CPF\n";
+      }
+      if (!form.cargo_publico.value) {
+        isValid = false;
+        errorMessage += "- Cargo/Emprego Público\n";
+      }
+      if (!form.endereco_rua.value) {
+        isValid = false;
+        errorMessage += "- Endereço (Rua)\n";
+      }
+      if (!form.endereco_cep.value) {
+        isValid = false;
+        errorMessage += "- Endereço (CEP)\n";
+      }
+
+      // Validação dos campos da tabela de patrimônio do titular
+      const descricaoPatrimonioTitularInputs = document.querySelectorAll('.inputsPatrimonioTitular[name="descricao_patrimonio[]"]');
+      const valorPatrimonioTitularInputs = document.querySelectorAll('.inputsPatrimonioTitular[name="valor_patrimonio[]"]');
+      for (let i = 0; i < descricaoPatrimonioTitularInputs.length; i++) {
+        if (!descricaoPatrimonioTitularInputs[i].value || !valorPatrimonioTitularInputs[i].value) {
+          isValid = false;
+          errorMessage += `- Descrição e Valor do Patrimônio (linha ${i + 1})\n`;
+        }
+      }
+
+      // Validação dos campos do cônjuge (se existir)
+      if (form.possui_conjuge.value === 'sim') {
+        if (!form.nome_conjuge.value) {
+          isValid = false;
+          errorMessage += "- Nome do Cônjuge\n";
+        }
+        if (!form.rg_conjuge.value) {
+          isValid = false;
+          errorMessage += "- RG do Cônjuge\n";
+        }
+
+        // Validação dos campos da tabela de patrimônio do cônjuge
+        const descricaoPatrimonioConjugeInputs = document.querySelectorAll('.inputsConjuge[name="descricao_patrimonio_conjuge[]"]');
+        const valorPatrimonioConjugeInputs = document.querySelectorAll('.inputsConjuge[name="valor_patrimonio_conjuge[]"]');
+        for (let i = 0; i < descricaoPatrimonioConjugeInputs.length; i++) {
+          if (!descricaoPatrimonioConjugeInputs[i].value || !valorPatrimonioConjugeInputs[i].value) {
+            isValid = false;
+            errorMessage += `- Descrição e Valor do Patrimônio do Cônjuge (linha ${i + 1})\n`;
+          }
+        }
+      }
+
+      // Validação dos campos do dependente (se existir)
+      if (form.possui_dependente.value === 'sim') {
+        if (!form.nome_dependente.value) {
+          isValid = false;
+          errorMessage += "- Nome do Dependente\n";
+        }
+        if (!form.rg_dependente.value) {
+          isValid = false;
+          errorMessage += "- RG do Dependente\n";
+        }
+
+        // Validação dos campos da tabela de patrimônio do dependente
+        const descricaoPatrimonioDependenteInputs = document.querySelectorAll('.inputsDependente[name="descricao_patrimonio_dependente[]"]');
+        const valorPatrimonioDependenteInputs = document.querySelectorAll('.inputsDependente[name="valor_patrimonio_dependente[]"]');
+        for (let i = 0; i < descricaoPatrimonioDependenteInputs.length; i++) {
+          if (!descricaoPatrimonioDependenteInputs[i].value || !valorPatrimonioDependenteInputs[i].value) {
+            isValid = false;
+            errorMessage += `- Descrição e Valor do Patrimônio do Dependente (linha ${i + 1})\n`;
+          }
+        }
+      }
+
+      // Se o formulário for válido, submete-o. Caso contrário, exibe a mensagem de erro
+      if (isValid) {
+        alert('Formulário enviado com sucesso!');
+        form.submit();
+      } else {
+        alert(errorMessage);
+      }
+    });
   </script>
 </body>
 

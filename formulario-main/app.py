@@ -1,8 +1,12 @@
-import uuid
-from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.exc import OperationalError, IntegrityError
+from flask import Flask, render_template, request, redirect, url_for, flash
+import uuid
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'sua_chave'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/formulario_declaracao"
 db = SQLAlchemy(app)
 
@@ -68,78 +72,129 @@ def index():
 @app.route("/create", methods=["GET", "POST"])
 def create():
     if request.method == "POST":
-        funcionario = Funcionario(
-            nome_completo=request.form["nome_completo"],
-            rg=request.form["rg"],
-            cpf=request.form["cpf"],
-            cargo_publico=request.form["cargo_publico"],
-            endereco_rua=request.form["endereco_rua"],
-            endereco_cep=request.form["endereco_cep"],
-        )
+        # Validação dos campos obrigatórios
+        if not all([
+            request.form["nome_completo"],
+            request.form["rg"],
+            request.form["cpf"],
+            request.form["cargo_publico"],
+            request.form["endereco_rua"],
+            request.form["endereco_cep"],
+        ]):
+            flash('Por favor, preencha todos os campos obrigatórios.', 'error')
+            return render_template("Create/create.html")
 
-        protocolo_uuid = uuid.uuid4()
-        protocolo_base64 = protocolo_uuid.bytes.hex() 
-        funcionario.protocolo = protocolo_base64 
+        try:
+            funcionario = Funcionario(
+                nome_completo=request.form["nome_completo"],
+                rg=request.form["rg"],
+                cpf=request.form["cpf"],
+                cargo_publico=request.form["cargo_publico"],
+                endereco_rua=request.form["endereco_rua"],
+                endereco_cep=request.form["endereco_cep"],
+            )
+
+            protocolo_uuid = uuid.uuid4()
+            protocolo_base64 = protocolo_uuid.bytes.hex() 
+            funcionario.protocolo = protocolo_base64 
+            
+            db.session.add(funcionario)
+            db.session.flush()  # Faz o banco de dados gerar o ID do funcionário
+
+            # Cônjuge
+            if request.form.get("possui_conjuge") == 'sim':
+                # Validação dos campos do cônjuge
+                if not all([
+                    request.form["nome_conjuge"],
+                    request.form["rg_conjuge"],
+                ]):
+                    flash('Por favor, preencha todos os campos do cônjuge.', 'error')
+                    return render_template("Create/create.html")
+
+                funcionario.nome_conjuge = request.form["nome_conjuge"]
+                funcionario.rg_conjuge = request.form["rg_conjuge"]
+
+                conjugue = Conjugue(
+                    nome=request.form["nome_conjuge"],
+                    rg=request.form["rg_conjuge"],
+                    funcionario_id=funcionario.id
+                )
+                db.session.add(conjugue) 
+                db.session.flush() # Garante que o cônjuge tenha um ID
+                
+                # Patrimônios do Cônjuge - AGORA com o ID do cônjuge
+                for i in range(len(request.form.getlist("descricao_patrimonio_conjuge[]"))):
+                    descricao = request.form.getlist("descricao_patrimonio_conjuge[]")[i]
+                    valor = request.form.getlist("valor_patrimonio_conjuge[]")[i]
+                    try:
+                        valor = int(valor)
+                    except ValueError:
+                        flash('Valor do patrimônio do cônjuge inválido. Por favor, insira um número válido.', 'error')
+                        return render_template("Create/create.html")
+
+                    conjugue_patrimonio = PtrConjugue(
+                        descricao=descricao,
+                        valor=valor,
+                        id_ptr_conjugue=conjugue.id  
+                    )
+                    db.session.add(conjugue_patrimonio)
+
+            # Dependente
+            if request.form.get("possui_dependente") == 'sim':
+                # Validação dos campos do dependente
+                if not all([
+                    request.form["nome_dependente"],
+                    request.form["rg_dependente"],
+                ]):
+                    flash('Por favor, preencha todos os campos do dependente.', 'error')
+                    return render_template("Create/create.html")
+
+                dependente = Dependente(
+                    nome=request.form["nome_dependente"],
+                    rg=request.form["rg_dependente"],
+                    funcionario_id=funcionario.id
+                )
+                db.session.add(dependente)
+                db.session.flush()  # Garante que o dependente tenha um ID
+                
+                 # Patrimônios do Dependente - AGORA com o ID do dependente
+                for i in range(len(request.form.getlist("descricao_patrimonio_dependente[]"))):
+                    descricao = request.form.getlist("descricao_patrimonio_dependente[]")[i]
+                    valor = request.form.getlist("valor_patrimonio_dependente[]")[i]
+                    try:
+                        valor = int(valor)
+                    except ValueError:
+                        flash('Valor do patrimônio do dependente inválido. Por favor, insira um número válido.', 'error')
+                        return render_template("Create/create.html")
+
+                    dependente_patrimonio = PtrDependente(
+                        descricao=descricao,
+                        valor=valor,
+                        id_ptr_dependente=dependente.id  
+                    )
+                    db.session.add(dependente_patrimonio)
+
+            # Salvando os patrimônios associados ao funcionário
+            for i in range(len(request.form.getlist("descricao_patrimonio[]"))):
+                descricao = request.form.getlist("descricao_patrimonio[]")[i]
+                valor = request.form.getlist("valor_patrimonio[]")[i]
+                try:
+                    valor = int(valor)
+                except ValueError:
+                    flash('Valor do patrimônio inválido. Por favor, insira um número válido.', 'error')
+                    return render_template("Create/create.html")
+
+                patrimonio = Patrimonio(descricao=descricao, valor=valor, funcionario_id=funcionario.id)
+                db.session.add(patrimonio)
+
+            db.session.commit()
+            flash('Declaração de bens registrada com sucesso!', 'success')
+            return redirect(url_for("show_funcionario", funcionario_id=funcionario.id))
         
-        db.session.add(funcionario)
-        db.session.flush()  # Faz o banco de dados gerar o ID do funcionário
-
-        # Cônjuge
-        if request.form.get("possui_conjuge") == 'sim':
-            funcionario.nome_conjuge = request.form["nome_conjuge"]
-            funcionario.rg_conjuge = request.form["rg_conjuge"]
-
-            conjugue = Conjugue(
-                nome=request.form["nome_conjuge"],
-                rg=request.form["rg_conjuge"],
-                funcionario_id=funcionario.id
-            )
-            db.session.add(conjugue) 
-            db.session.flush() # Garante que o cônjuge tenha um ID
-            
-            # Patrimônios do Cônjuge - AGORA com o ID do cônjuge
-            for i in range(len(request.form.getlist("descricao_patrimonio_conjuge[]"))):
-                descricao = request.form.getlist("descricao_patrimonio_conjuge[]")[i]
-                valor = request.form.getlist("valor_patrimonio_conjuge[]")[i]
-
-                conjugue_patrimonio = PtrConjugue(
-                    descricao=descricao,
-                    valor=valor,
-                    id_ptr_conjugue=conjugue.id  
-                )
-                db.session.add(conjugue_patrimonio)
-
-        # Dependente
-        if request.form.get("possui_dependente") == 'sim':
-            dependente = Dependente(
-                nome=request.form["nome_dependente"],
-                rg=request.form["rg_dependente"],
-                funcionario_id=funcionario.id
-            )
-            db.session.add(dependente)
-            db.session.flush()  # Garante que o dependente tenha um ID
-            
-             # Patrimônios do Dependente - AGORA com o ID do dependente
-            for i in range(len(request.form.getlist("descricao_patrimonio_dependente[]"))):
-                descricao = request.form.getlist("descricao_patrimonio_dependente[]")[i]
-                valor = request.form.getlist("valor_patrimonio_dependente[]")[i]
-
-                dependente_patrimonio = PtrDependente(
-                    descricao=descricao,
-                    valor=valor,
-                    id_ptr_dependente=dependente.id  
-                )
-                db.session.add(dependente_patrimonio)
-
-        # Salvando os patrimônios associados ao funcionário
-        for i in range(len(request.form.getlist("descricao_patrimonio[]"))):
-            descricao = request.form.getlist("descricao_patrimonio[]")[i]
-            valor = request.form.getlist("valor_patrimonio[]")[i]
-            patrimonio = Patrimonio(descricao=descricao, valor=valor, funcionario_id=funcionario.id)
-            db.session.add(patrimonio)
-
-        db.session.commit()
-        return redirect(url_for("show_funcionario", funcionario_id=funcionario.id))
+        except (OperationalError, IntegrityError) as e:
+            db.session.rollback()
+            flash(f'Erro ao registrar declaração: {str(e)}', 'error')
+            return render_template("Create/create.html")
     return render_template("Create/create.html")
 
 @app.route("/update/<int:id>", methods=["GET", "POST"])
