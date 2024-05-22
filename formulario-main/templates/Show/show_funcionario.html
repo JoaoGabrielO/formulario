@@ -16,7 +16,7 @@
         table {
             width: 80%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: .5rem;
         }
 
         th,
@@ -30,25 +30,14 @@
             background-color: #f2f2f2;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            text-align: left;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #f0f0f0;
+        .h2 {
+            margin-top: 4rem;
         }
     </style>
 </head>
 
 <body>
-    <h1>Dados do Funcionário</h1>
+    <h2>Dados do Funcionário</h2>
 
     <table>
         <tr>
@@ -74,73 +63,99 @@
         </tr>
     </table>
 
-    <h2>Cônjuge</h2>
-    {% if funcionario.conjuges %}
-    <p>Nome: {{ funcionario.conjuges.nome }}</p>
-    <p>RG: {{ funcionario.conjuges.rg }}</p>
-    <h3>Patrimônios do Cônjuge</h3>
-    <ul>
-        {% for patrimonio in funcionario.conjuges.patrimonios %}
-        <li>Descrição: {{ patrimonio.descricao }} - Valor: R$ {{ patrimonio.valor }}</li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>Nenhum cônjuge registrado.</p>
-    {% endif %}
-
-    <h3>Patrimônios do Cônjuge</h3>
-    <ul>
-        {% for patrimonio in funcionario.conjuges.patrimonios %}
-        <li>Descrição: {{ patrimonio.descricao }} - Valor: R$ {{ patrimonio.valor }}</li>
-        {% endfor %}
-    </ul>
-
-    <h2>Dependentes</h2>
-    {% if funcionario.dependentes %}
+    <h3>Patrimônios do Funcionário</h3>
     <table>
-        <tr>
-            <th colspan="2">Dependentes</th>
-        </tr>
-        {% for dependente in funcionario.dependentes %}
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patrimonio in funcionario.patrimonios %}
+            <tr>
+                <td>{{ patrimonio.descricao }}</td>
+                <td>R$ {{ patrimonio.valor }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="h2">Cônjuge</h2>
+    <table>
+        {% if funcionario.conjuges %}
         <tr>
             <th>Nome</th>
-            <td>{{ dependente.nome }}</td>
+            <td>{{ funcionario.conjuges.nome }}</td>
         </tr>
         <tr>
             <th>RG</th>
-            <td>{{ dependente.rg }}</td>
+            <td>{{ funcionario.conjuges.rg }}</td>
         </tr>
+        {% else %}
         <tr>
-            <th colspan="2">Patrimônios do Dependente</th>
+            <th>Nome</th>
+            <th>RG</th>
         </tr>
-        {% for patrimonio in dependente.patrimonios %}
-        <tr>
-            <td>Descrição</td>
-            <td>{{ patrimonio.descricao }}</td>
-        </tr>
-        <tr>
-            <td>Valor</td>
-            <td>R$ {{ patrimonio.valor }}</td>
-        </tr>
-        {% endfor %}
-        {% endfor %}
+        {% endif %}
     </table>
-    {% else %}
-    <p>Nenhum dependente registrado.</p>
-    {% endif %}
 
-    <h2>Patrimônios do Funcionário</h2>
+    <h3>Patrimônios do Cônjuge</h3>
     <table>
-        <tr>
-            <th>Descrição</th>
-            <th>Valor</th>
-        </tr>
-        {% for patrimonio in funcionario.patrimonios %}
-        <tr>
-            <td>{{ patrimonio.descricao }}</td>
-            <td>R$ {{ patrimonio.valor }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patrimonio in funcionario.conjuges.patrimonios %}
+            <tr>
+                <td>{{ patrimonio.descricao }}</td>
+                <td>R$ {{ patrimonio.valor }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="h2">Dependentes</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>RG</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dependente in funcionario.dependentes %}
+            <tr>
+                <td>{{ dependente.nome }}</td>
+                <td>{{ dependente.rg }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Patrimônios dos Dependentes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome do Dependente</th>
+                <th>Descrição do Patrimônio</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dependente in funcionario.dependentes %}
+            {% for patrimonio in dependente.patrimonios %}
+            <tr>
+                <td>{{ dependente.nome }}</td>
+                <td>{{ patrimonio.descricao }}</td>
+                <td>R$ {{ patrimonio.valor }}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
     </table>
 </body>
 

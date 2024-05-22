@@ -338,6 +338,7 @@
     </div>
 
     <div id="conjuge_form" style="display: none;">
+      
       <label for="nome_conjuge">Nome do cônjuge:</label>
       <input class="inputsDadosConjuge" type="text" id="nome_conjuge" name="nome_conjuge" required><br><br>
       <label for="rg_conjuge">RG do cônjuge:</label>
@@ -457,22 +458,21 @@
     }
 
     // Função para abrir o modal de termos e condições
-    function abrirModal() {
-      document.getElementById('termosModal').style.display = 'block';
-    }
+    async function abrirModal() {
+      // Aguarda a validação de todos os campos
+      const validacaoTitular = await validarCampo('nome_completo') &&
+        await validarCampo('rg') &&
+        await validarCampo('cpf') &&
+        await validarCampo('cargo_publico') &&
+        await validarCampo('endereco_rua') &&
+        await validarCampo('endereco_cep');
 
-    // Função para abrir o modal de termos e condições
-    function abrirModal() {
-      // Verifica cada campo individualmente
-      if (validarCampo('nome_completo') &&
-        validarCampo('rg') &&
-        validarCampo('cpf') &&
-        validarCampo('cargo_publico') &&
-        validarCampo('endereco_rua') &&
-        validarCampo('endereco_cep') &&
-        validarTabela('patrimonio_table') &&
-        validarConjuge() &&
-        validarDependente()) {
+      const validacaoPatrimonio = await validarTabela('patrimonio_table');
+      const validacaoConjuge = await validarConjuge();
+      const validacaoDependente = await validarDependente();
+
+      // Verifica se TODAS as validações passaram
+      if (validacaoTitular && validacaoPatrimonio && validacaoConjuge && validacaoDependente) {
         document.getElementById('termosModal').style.display = 'block';
       }
     }
@@ -485,15 +485,58 @@
       alert("Cadastro realizado com sucesso!");
     }
 
-    // Função genérica para validar um campo
-    function validarCampo(campoId) {
+    async function validarCampo(campoId) {
       let campo = document.getElementById(campoId);
       if (campo.value === "") {
         alert("Por favor, preencha o campo: " + campo.previousElementSibling.textContent);
         campo.focus();
         return false;
+      } else if (campoId === 'cpf') {
+        if (!await validarCPF(campo.value)) {
+          alert("CPF inválido!");
+          campo.focus();
+          return false;
+        }
       }
       return true;
+    }
+
+    async function validarCPF(cpf) {
+      // Remove non-digit characters from CPF
+      cpf = cpf.replace(/\D/g, '');
+
+      // Check if CPF has 11 digits
+      if (cpf.length !== 11) {
+        return false;
+      }
+
+      // Check for repeated digits (invalid CPFs)
+      if (/(\d)\1{10}/.test(cpf)) {
+        return false;
+      }
+
+      // Calculate the first check digit
+      let sum = 0;
+      for (let i = 0; i < 9; i++) {
+        sum += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let checkDigit1 = 11 - (sum % 11);
+      if (checkDigit1 >= 10) {
+        checkDigit1 = 0;
+      }
+
+      // Calculate the second check digit
+      sum = 0;
+      for (let i = 0; i < 10; i++) {
+        sum += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      let checkDigit2 = 11 - (sum % 11);
+      if (checkDigit2 >= 10) {
+        checkDigit2 = 0;
+      }
+
+      // Check if calculated digits match the last two digits of the CPF
+      return checkDigit1 === parseInt(cpf.charAt(9)) && checkDigit2 === parseInt(cpf.charAt(10));
     }
 
     // Função para validar a tabela de patrimônio
@@ -533,6 +576,43 @@
       }
       return true;
     }
+
+    function validarFormulario() {
+  // Valida os campos obrigatórios
+  if (!validarCampo('nome_completo') ||
+    !validarCampo('rg') ||
+    !validarCampo('cpf') ||
+    !validarCampo('cargo_publico') ||
+    !validarCampo('endereco_rua') ||
+    !validarCampo('endereco_cep')) {
+    return false;
+  }
+
+  // Valida a tabela de patrimônio
+  if (!validarTabela('patrimonio_table')) {
+    return false;
+  }
+
+  // Valida o cônjuge
+  if (!validarConjuge()) {
+    return false;
+  }
+
+  // Valida o dependente
+  if (!validarDependente()) {
+    return false;
+  }
+
+  return true;
+}
+
+document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+  event.preventDefault(); // Impede o submit padrão
+
+  if (validarFormulario()) {
+    abrirModal();
+  }
+});
   </script>
 </body>
 

@@ -212,58 +212,111 @@
   </form>
 
   <script>
-// Função para fechar o modal, submeter o formulário e exibir a mensagem de sucesso
-function aceitarTermos() {
-  document.getElementById('termosModal').style.display = 'none';
+    // Função para fechar o modal, submeter o formulário e exibir a mensagem de sucesso
+    function aceitarTermos() {
+      document.getElementById('termosModal').style.display = 'none';
 
-  // Valida os campos novamente antes de submeter
-  if (validarCampo('nome_completo') && 
-      validarCampo('rg') && 
-      validarCampo('cpf') && 
-      validarCampo('cargo_publico') &&
-      validarCampo('endereco_rua') && 
-      validarCampo('endereco_cep')) {
+      // Valida os campos novamente antes de submeter
+      if (validarCampo('nome_completo') &&
+        validarCampo('rg') &&
+        validarCampo('cpf') &&
+        validarCampo('cargo_publico') &&
+        validarCampo('endereco_rua') &&
+        validarCampo('endereco_cep')) {
 
-    // Submete o formulário apenas se a validação for bem-sucedida
-    document.getElementById('declaracaoForm').submit();
+        // Submete o formulário apenas se a validação for bem-sucedida
+        document.getElementById('declaracaoForm').submit();
 
-    // Exibe a mensagem de sucesso (selecione uma das opções abaixo)
-    alert("Cadastro realizado com sucesso!"); // Opção 1: Mostrar alerta
-    // window.location.href = "sucesso.html"; // Opção 2: Redirecionar 
-  }
-}
+        // Exibe a mensagem de sucesso (selecione uma das opções abaixo)
+        alert("Cadastro realizado com sucesso!"); // Opção 1: Mostrar alerta
+        // window.location.href = "sucesso.html"; // Opção 2: Redirecionar 
+      }
+    }
 
-// Validação do formulário (no evento submit)
-document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
-  event.preventDefault(); // Impede o submit padrão
+    // Validação do formulário (no evento submit)
+    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Impede o submit padrão
 
-  if (validarCampo('nome_completo') && 
-      validarCampo('rg') && 
-      validarCampo('cpf') && 
-      validarCampo('cargo_publico') &&
-      validarCampo('endereco_rua') && 
-      validarCampo('endereco_cep')) {
-    
-    // Abre o modal se a validação for bem-sucedida
-    abrirModal(); 
-  }
-});
+      if (validarCampo('nome_completo') &&
+        validarCampo('rg') &&
+        validarCampo('cpf') &&
+        validarCampo('cargo_publico') &&
+        validarCampo('endereco_rua') &&
+        validarCampo('endereco_cep')) {
 
-// Função para abrir o modal
-function abrirModal() {
-  document.getElementById('termosModal').style.display = 'block';
-}
+        // Valida o CPF
+        let cpfInput = document.getElementById('cpf');
+        let cpf = cpfInput.value;
+        if (!validarCPF(cpf)) {
+          alert("CPF inválido. Por favor, corrija o CPF.");
+          cpfInput.focus();
+          return; // Interrompe a validação
+        }
 
-// Função genérica para validar um campo
-function validarCampo(campoId) {
-  let campo = document.getElementById(campoId);
-  if (campo.value === "") {
-    alert("Por favor, preencha o campo: " + campo.previousElementSibling.textContent);
-    campo.focus();
-    return false;
-  }
-  return true;
-}
+        // Abre o modal se a validação for bem-sucedida
+        abrirModal();
+      }
+    });
+
+    // Função para abrir o modal
+    function abrirModal() {
+      document.getElementById('termosModal').style.display = 'block';
+    }
+
+    // Função genérica para validar um campo, incluindo a validação de CPF
+    function validarCampo(campoId) {
+      let campo = document.getElementById(campoId);
+      if (campo.value === "") {
+        alert("Por favor, preencha o campo: " + campo.previousElementSibling.textContent);
+        campo.focus();
+        return false;
+      } else if (campoId === 'cpf') { // Verifica se é o campo CPF
+        if (!validarCPF(campo.value)) { // Chama a função validarCPF
+          alert("CPF inválido!");
+          campo.focus();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function validarCPF(cpf) {
+      // Remove caracteres não numéricos do CPF
+      cpf = cpf.replace(/\D/g, '');
+
+      // Verifica se o CPF possui 11 dígitos
+      if (cpf.length !== 11) {
+        return false;
+      }
+
+      // Verifica se todos os dígitos são iguais (CPFs inválidos)
+      if (/(\d)\1{10}/.test(cpf)) {
+        return false;
+      }
+
+      // Calcula o primeiro dígito verificador
+      let sum = 0;
+      for (let i = 0; i < 9; i++) {
+        sum += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let checkDigit1 = 11 - (sum % 11);
+      if (checkDigit1 >= 10) {
+        checkDigit1 = 0;
+      }
+
+      // Calcula o segundo dígito verificador
+      sum = 0;
+      for (let i = 0; i < 10; i++) {
+        sum += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      let checkDigit2 = 11 - (sum % 11);
+      if (checkDigit2 >= 10) {
+        checkDigit2 = 0;
+      }
+
+      // Verifica se os dígitos calculados correspondem aos dois últimos dígitos do CPF
+      return checkDigit1 === parseInt(cpf.charAt(9)) && checkDigit2 === parseInt(cpf.charAt(10));
+    }
   </script>
 </body>
 

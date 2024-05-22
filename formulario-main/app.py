@@ -197,54 +197,54 @@ def create():
             return render_template("Create/create.html")
     return render_template("Create/create.html")
 
-@app.route("/update/<int:id>", methods=["GET", "POST"])
-def update(id):
-    funcionario = Funcionario.query.get(id)
-    if request.method == "POST":
-        funcionario.nome_completo = request.form["nome_completo"]
-        funcionario.rg = request.form["rg"]
-        funcionario.cpf = request.form["cpf"]
-        funcionario.cargo_publico = request.form["cargo_publico"]
-        funcionario.endereco_rua = request.form["endereco_rua"]
-        funcionario.endereco_cep = request.form["endereco_cep"]
+# @app.route("/update/<int:id>", methods=["GET", "POST"])
+# def update(id):
+#     funcionario = Funcionario.query.get(id)
+#     if request.method == "POST":
+    #     funcionario.nome_completo = request.form["nome_completo"]
+    #     funcionario.rg = request.form["rg"]
+    #     funcionario.cpf = request.form["cpf"]
+    #     funcionario.cargo_publico = request.form["cargo_publico"]
+    #     funcionario.endereco_rua = request.form["endereco_rua"]
+    #     funcionario.endereco_cep = request.form["endereco_cep"]
         
-        if request.form.get("nome_conjuge"):
-            if not funcionario.conjuges:
-                conjugue = Conjugue(
-                    nome=request.form["nome_conjuge"],
-                    rg=request.form["rg_conjuge"],
-                    funcionario_id=funcionario.id
-                )
-                db.session.add(conjugue)
-            else:
-                conjugue = funcionario.conjuges
-                conjugue.nome = request.form["nome_conjuge"]
-                conjugue.rg = request.form["rg_conjuge"]
+    #     if request.form.get("nome_conjuge"):
+        #     if not funcionario.conjuges:
+        #         conjugue = Conjugue(
+        #             nome=request.form["nome_conjuge"],
+        #             rg=request.form["rg_conjuge"],
+        #             funcionario_id=funcionario.id
+        #         )
+        #         db.session.add(conjugue)
+        #     else:
+        #         conjugue = funcionario.conjuges
+         #        conjugue.nome = request.form["nome_conjuge"]
+       #          conjugue.rg = request.form["rg_conjuge"]
         
-        if request.form.get("nome_dependente"):
-            if not funcionario.dependentes:
-                dependente = Dependente(
-                    nome=request.form["nome_dependente"],
-                    rg=request.form["rg_dependente"],
-                    funcionario_id=funcionario.id
-                )
-                db.session.add(dependente)
-            else:
-                dependente = funcionario.dependentes[0]  # Assuming one dependente for simplicity
-                dependente.nome = request.form["nome_dependente"]
-                dependente.rg = request.form["rg_dependente"]
+       #  if request.form.get("nome_dependente"):
+     #        if not funcionario.dependentes:
+   #              dependente = Dependente(
+               #      nome=request.form["nome_dependente"],
+             #        rg=request.form["rg_dependente"],
+           #          funcionario_id=funcionario.id
+         #        )
+       #          db.session.add(dependente)
+     #        else:
+   #              dependente = funcionario.dependentes[0]  # Assuming one dependente for simplicity
+ #                dependente.nome = request.form["nome_dependente"]
+  #               dependente.rg = request.form["rg_dependente"]
                 
-        db.session.commit()
-        return redirect(url_for("index"))
-    return render_template("Update/update.html", funcionario=funcionario)
+  #       db.session.commit()
+ #        return redirect(url_for("index"))
+#    return render_template("Update/update.html", funcionario=funcionario)
 
 
-@app.route("/delete/<int:id>")
-def delete(id):
-    funcionario = Funcionario.query.get(id)
-    db.session.delete(funcionario)
-    db.session.commit()
-    return redirect(url_for("index"))
+#@app.route("/delete/<int:id>")
+#def delete(id):
+ #   funcionario = Funcionario.query.get(id)
+  #  db.session.delete(funcionario)
+   # db.session.commit()
+   # return redirect(url_for("index"))
 
 @app.route("/nao_possui_bens", methods=["GET", "POST"])
 def nao_possui_bens():
