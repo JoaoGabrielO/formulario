@@ -212,29 +212,58 @@
   </form>
 
   <script>
+// Função para fechar o modal, submeter o formulário e exibir a mensagem de sucesso
+function aceitarTermos() {
+  document.getElementById('termosModal').style.display = 'none';
 
-    // Função para abrir o modal
-    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
-      event.preventDefault(); // Impede o submit padrão
-      document.getElementById('termosModal').style.display = 'block';
-    });
+  // Valida os campos novamente antes de submeter
+  if (validarCampo('nome_completo') && 
+      validarCampo('rg') && 
+      validarCampo('cpf') && 
+      validarCampo('cargo_publico') &&
+      validarCampo('endereco_rua') && 
+      validarCampo('endereco_cep')) {
 
-    // Função para fechar o modal e marcar a caixa de seleção
-    function aceitarTermos() {
-      document.getElementById('termosModal').style.display = 'none';
-      document.getElementById('declaracaoForm').submit(); // Submete o formulário
-    }
+    // Submete o formulário apenas se a validação for bem-sucedida
+    document.getElementById('declaracaoForm').submit();
 
-    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
-      event.preventDefault(); // Impede o submit padrão
+    // Exibe a mensagem de sucesso (selecione uma das opções abaixo)
+    alert("Cadastro realizado com sucesso!"); // Opção 1: Mostrar alerta
+    // window.location.href = "sucesso.html"; // Opção 2: Redirecionar 
+  }
+}
 
-      document.getElementById('termosModal').style.display = 'block';
-    });
+// Validação do formulário (no evento submit)
+document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+  event.preventDefault(); // Impede o submit padrão
 
-    function abrirModal() {
-      document.getElementById('termosModal').style.display = 'block';
-    }
+  if (validarCampo('nome_completo') && 
+      validarCampo('rg') && 
+      validarCampo('cpf') && 
+      validarCampo('cargo_publico') &&
+      validarCampo('endereco_rua') && 
+      validarCampo('endereco_cep')) {
+    
+    // Abre o modal se a validação for bem-sucedida
+    abrirModal(); 
+  }
+});
 
+// Função para abrir o modal
+function abrirModal() {
+  document.getElementById('termosModal').style.display = 'block';
+}
+
+// Função genérica para validar um campo
+function validarCampo(campoId) {
+  let campo = document.getElementById(campoId);
+  if (campo.value === "") {
+    alert("Por favor, preencha o campo: " + campo.previousElementSibling.textContent);
+    campo.focus();
+    return false;
+  }
+  return true;
+}
   </script>
 </body>
 

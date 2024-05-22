@@ -461,109 +461,78 @@
       document.getElementById('termosModal').style.display = 'block';
     }
 
+    // Função para abrir o modal de termos e condições
+    function abrirModal() {
+      // Verifica cada campo individualmente
+      if (validarCampo('nome_completo') &&
+        validarCampo('rg') &&
+        validarCampo('cpf') &&
+        validarCampo('cargo_publico') &&
+        validarCampo('endereco_rua') &&
+        validarCampo('endereco_cep') &&
+        validarTabela('patrimonio_table') &&
+        validarConjuge() &&
+        validarDependente()) {
+        document.getElementById('termosModal').style.display = 'block';
+      }
+    }
+
     // Função para fechar o modal e submeter o formulário
     function aceitarTermos() {
       document.getElementById('termosModal').style.display = 'none';
+      // Submete o formulário se passou na validação
       document.getElementById('declaracaoForm').submit();
+      alert("Cadastro realizado com sucesso!");
     }
 
-    // Validação do formulário
-    const form = document.getElementById('declaracaoForm');
+    // Função genérica para validar um campo
+    function validarCampo(campoId) {
+      let campo = document.getElementById(campoId);
+      if (campo.value === "") {
+        alert("Por favor, preencha o campo: " + campo.previousElementSibling.textContent);
+        campo.focus();
+        return false;
+      }
+      return true;
+    }
 
-    form.addEventListener('submit', function (event) {
-      event.preventDefault(); // Impede o envio padrão do formulário
-
-      let isValid = true;
-      let errorMessage = "Por favor, preencha os seguintes campos:\n";
-
-      // Validação dos campos do funcionário
-      if (!form.nome_completo.value) {
-        isValid = false;
-        errorMessage += "- Nome Completo\n";
-      }
-      if (!form.rg.value) {
-        isValid = false;
-        errorMessage += "- RG\n";
-      }
-      if (!form.cpf.value) {
-        isValid = false;
-        errorMessage += "- CPF\n";
-      }
-      if (!form.cargo_publico.value) {
-        isValid = false;
-        errorMessage += "- Cargo/Emprego Público\n";
-      }
-      if (!form.endereco_rua.value) {
-        isValid = false;
-        errorMessage += "- Endereço (Rua)\n";
-      }
-      if (!form.endereco_cep.value) {
-        isValid = false;
-        errorMessage += "- Endereço (CEP)\n";
-      }
-
-      // Validação dos campos da tabela de patrimônio do titular
-      const descricaoPatrimonioTitularInputs = document.querySelectorAll('.inputsPatrimonioTitular[name="descricao_patrimonio[]"]');
-      const valorPatrimonioTitularInputs = document.querySelectorAll('.inputsPatrimonioTitular[name="valor_patrimonio[]"]');
-      for (let i = 0; i < descricaoPatrimonioTitularInputs.length; i++) {
-        if (!descricaoPatrimonioTitularInputs[i].value || !valorPatrimonioTitularInputs[i].value) {
-          isValid = false;
-          errorMessage += `- Descrição e Valor do Patrimônio (linha ${i + 1})\n`;
+    // Função para validar a tabela de patrimônio
+    function validarTabela(tabelaId) {
+      let tabela = document.getElementById(tabelaId).getElementsByTagName('tbody')[0];
+      for (let i = 0; i < tabela.rows.length; i++) {
+        let descricao = tabela.rows[i].cells[0].querySelector('input').value;
+        let valor = tabela.rows[i].cells[1].querySelector('input').value;
+        if (descricao === "" || valor === "") {
+          alert(`Por favor, preencha a Descrição e Valor do Patrimônio na linha ${i + 1}.`);
+          return false;
         }
       }
+      return true;
+    }
 
-      // Validação dos campos do cônjuge (se existir)
-      if (form.possui_conjuge.value === 'sim') {
-        if (!form.nome_conjuge.value) {
-          isValid = false;
-          errorMessage += "- Nome do Cônjuge\n";
-        }
-        if (!form.rg_conjuge.value) {
-          isValid = false;
-          errorMessage += "- RG do Cônjuge\n";
-        }
-
-        // Validação dos campos da tabela de patrimônio do cônjuge
-        const descricaoPatrimonioConjugeInputs = document.querySelectorAll('.inputsConjuge[name="descricao_patrimonio_conjuge[]"]');
-        const valorPatrimonioConjugeInputs = document.querySelectorAll('.inputsConjuge[name="valor_patrimonio_conjuge[]"]');
-        for (let i = 0; i < descricaoPatrimonioConjugeInputs.length; i++) {
-          if (!descricaoPatrimonioConjugeInputs[i].value || !valorPatrimonioConjugeInputs[i].value) {
-            isValid = false;
-            errorMessage += `- Descrição e Valor do Patrimônio do Cônjuge (linha ${i + 1})\n`;
-          }
+    // Função para validar os campos do cônjuge
+    function validarConjuge() {
+      if (document.getElementById('possui_conjuge_sim').checked) {
+        if (!validarCampo('nome_conjuge') ||
+          !validarCampo('rg_conjuge') ||
+          !validarTabela('conjuge_table')) {
+          return false;
         }
       }
+      return true;
+    }
 
-      // Validação dos campos do dependente (se existir)
-      if (form.possui_dependente.value === 'sim') {
-        if (!form.nome_dependente.value) {
-          isValid = false;
-          errorMessage += "- Nome do Dependente\n";
-        }
-        if (!form.rg_dependente.value) {
-          isValid = false;
-          errorMessage += "- RG do Dependente\n";
-        }
-
-        // Validação dos campos da tabela de patrimônio do dependente
-        const descricaoPatrimonioDependenteInputs = document.querySelectorAll('.inputsDependente[name="descricao_patrimonio_dependente[]"]');
-        const valorPatrimonioDependenteInputs = document.querySelectorAll('.inputsDependente[name="valor_patrimonio_dependente[]"]');
-        for (let i = 0; i < descricaoPatrimonioDependenteInputs.length; i++) {
-          if (!descricaoPatrimonioDependenteInputs[i].value || !valorPatrimonioDependenteInputs[i].value) {
-            isValid = false;
-            errorMessage += `- Descrição e Valor do Patrimônio do Dependente (linha ${i + 1})\n`;
-          }
+    // Função para validar os campos do dependente
+    function validarDependente() {
+      if (document.getElementById('possui_dependente_sim').checked) {
+        if (!validarCampo('nome_dependente') ||
+          !validarCampo('rg_dependente') ||
+          !validarTabela('dependente_table')) {
+          return false;
         }
       }
-
-      // Se o formulário for válido, submete-o. Caso contrário, exibe a mensagem de erro
-      if (isValid) {
-        alert('Formulário enviado com sucesso!');
-        form.submit();
-      } else {
-        alert(errorMessage);
-      }
-    });
+      return true;
+    }
   </script>
 </body>
 
