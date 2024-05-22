@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import OperationalError, IntegrityError
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import uuid
 
 app = Flask(__name__)
@@ -63,12 +63,61 @@ class PtrDependente(db.Model):
     descricao = db.Column(db.String(100), nullable=False)
     valor = db.Column(db.Float, nullable=False)
     id_ptr_dependente = db.Column(db.Integer, db.ForeignKey('dependente.id'), nullable=False)
+
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
     
 @app.route("/")
 def index():
     funcionarios = Funcionario.query.all()
     return render_template("Index/index.html", funcionarios=funcionarios)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Substitua isso pela sua lógica de autenticação real
+        if username == 'admin' and password == 'admin':
+            session['logged_in'] = True
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(url_for('search'))
+        else:
+            flash('Usuário ou senha inválidos!', 'error')
+    return render_template('Login/login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('Logout realizado com sucesso!', 'success')
+    return redirect(url_for('login'))
+
+@app.route('/search')
+def search():
+    if not session.get('logged_in'):
+        flash('Você precisa estar logado para acessar esta página!', 'error')
+        return redirect(url_for('login'))
+
+    protocolo = request.args.get('protocolo')
+    if protocolo:
+        funcionario = Funcionario.query.filter_by(protocolo=protocolo).first()
+        if funcionario:
+            return render_template('Login/search.html', funcionario=funcionario)
+        else:
+            flash('Nenhum funcionário encontrado com este protocolo.', 'error')
+            return render_template('Login/search.html')
+    else:
+        return render_template('Login/search.html')
+    
 @app.route("/create", methods=["GET", "POST"])
 def create():
     if request.method == "POST":

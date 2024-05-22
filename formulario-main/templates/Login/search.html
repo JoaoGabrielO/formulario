@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisar Protocolo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Pesquisar Protocolo</h2>
+        <form method="GET" action="{{ url_for('search') }}">
+            <label for="protocolo">Protocolo:</label>
+            <input type="text" id="protocolo" name="protocolo" required>
+            <button type="submit">Pesquisar</button>
+        </form>
+
+        {% if funcionario %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nome Completo</td>
+                        <td>{{ funcionario.nome_completo }}</td>
+                    </tr>
+                    <tr>
+                        <td>RG</td>
+                        <td>{{ funcionario.rg }}</td>
+                    </tr>
+                    <tr>
+                        <td>CPF</td>
+                        <td>{{ funcionario.cpf }}</td>
+                    </tr>
+                    <tr>
+                        <td>Cargo Público</td>
+                        <td>{{ funcionario.cargo_publico }}</td>
+                    </tr>
+                    <tr>
+                        <td>Endereço (Rua)</td>
+                        <td>{{ funcionario.endereco_rua }}</td>
+                    </tr>
+                    <tr>
+                        <td>Endereço (CEP)</td>
+                        <td>{{ funcionario.endereco_cep }}</td>
+                    </tr>
+                    <tr>
+                        <td>Nome do Cônjuge</td>
+                        <td>{{ funcionario.nome_conjuge }}</td> 
+                    </tr>
+                    <tr>
+                        <td>RG do Cônjuge</td>
+                        <td>{{ funcionario.rg_conjuge }}</td> 
+                    </tr>
+                    <tr>
+                        <td>Protocolo</td>
+                        <td>{{ funcionario.protocolo }}</td>
+                    </tr>
+                    <!-- Outros campos do funcionário -->
+                </tbody>
+            </table>
+
+            <h2>Cônjuge</h2>
+            {% if funcionario.conjuges %}
+                <h3>Patrimônios do Cônjuge</h3>
+                <ul>
+                    {% for patrimonio in funcionario.conjuges.patrimonios %}
+                        <li>Descrição: {{ patrimonio.descricao }} - Valor: R$ {{ patrimonio.valor }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Nenhum cônjuge registrado.</p>
+            {% endif %}
+
+            <h2>Dependentes</h2>
+            {% if funcionario.dependentes %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>RG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dependente in funcionario.dependentes %}
+                            <tr>
+                                <td>{{ dependente.nome }}</td>
+                                <td>{{ dependente.rg }}</td>
+                            </tr>
+                            {% for patrimonio in dependente.patrimonios %}
+                                <tr>
+                                    <td>Descrição: {{ patrimonio.descricao }} - Valor: R$ {{ patrimonio.valor }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Nenhum dependente registrado.</p>
+            {% endif %}
+
+            <h2>Patrimônios do Funcionário</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patrimonio in funcionario.patrimonios %}
+                        <tr>
+                            <td>{{ patrimonio.descricao }}</td>
+                            <td>R$ {{ patrimonio.valor }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif 'protocolo' in request.args %}
+            <p>Nenhum funcionário encontrado com este protocolo.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
