@@ -100,23 +100,23 @@ def logout():
     session.pop('logged_in', None)
     flash('Logout realizado com sucesso!', 'success')
     return redirect(url_for('login'))
-
-@app.route('/search')
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     if not session.get('logged_in'):
         flash('Você precisa estar logado para acessar esta página!', 'error')
         return redirect(url_for('login'))
 
+    funcionarios = Funcionario.query.all()  # Busca todos os funcionários inicialmente
+
     protocolo = request.args.get('protocolo')
     if protocolo:
-        funcionario = Funcionario.query.filter_by(protocolo=protocolo).first()
-        if funcionario:
-            return render_template('Login/search.html', funcionario=funcionario)
-        else:
+        # Filtra os funcionários pelo protocolo se ele for fornecido
+        funcionarios = Funcionario.query.filter_by(protocolo=protocolo).all()
+
+        if not funcionarios:
             flash('Nenhum funcionário encontrado com este protocolo.', 'error')
-            return render_template('Login/search.html')
-    else:
-        return render_template('Login/search.html')
+    
+    return render_template('Login/search.html', funcionarios=funcionarios)
     
 @app.route("/create", methods=["GET", "POST"])
 def create():
