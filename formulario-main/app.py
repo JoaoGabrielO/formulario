@@ -10,12 +10,6 @@ app.config['SECRET_KEY'] = 'sua_chave'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/formulario_declaracao"
 db = SQLAlchemy(app)
 
-try:
-    db.session.execute('SELECT 1')
-    print("Conexão com o banco de dados bem-sucedida.")
-except Exception as e:
-    print(f"Erro ao conectar ao banco de dados: {e}")
-
 
 class Funcionario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
