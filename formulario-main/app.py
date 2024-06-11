@@ -7,7 +7,7 @@ import uuid
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua_chave'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/formulario_declaracao"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@127.0.0.1/formulario_declaracao"
 db = SQLAlchemy(app)
 
 
