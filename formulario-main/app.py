@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import OperationalError, IntegrityError
 from flask import Flask, jsonify, render_template, request, redirect, session, url_for, flash
@@ -8,9 +8,16 @@ import uuid
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua_chave'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@127.0.0.1/formulario_declaracao"
+engine = create_engine('mysql://root:123456@10.10.10.103:3306/formulario_declaracao')
 db = SQLAlchemy(app)
 
-
+try:
+    conexao = engine.connect()
+    print("Conexão bem-sucedida!")
+    conexao.close() 
+except Exception as e:
+    print(f"Erro na conexão: {e}")
+    
 class Funcionario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome_completo = db.Column(db.String(100), nullable=False)
