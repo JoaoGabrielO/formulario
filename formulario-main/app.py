@@ -7,12 +7,11 @@ import uuid
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua_chave'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@127.0.0.1/formulario_declaracao"
-engine = create_engine('mysql://root:123456@10.10.10.103:3306/formulario_declaracao')
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@10.10.10.103:3306/formulario_declaracao"
 db = SQLAlchemy(app)
 
 try:
-    conexao = engine.connect()
+    conexao = db.engine.connect()
     print("Conexão bem-sucedida!")
     conexao.close() 
 except Exception as e:
