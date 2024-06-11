@@ -180,7 +180,7 @@
     <div class="divRgCPF">
       <div>
         <label for="cpf">CPF:</label>
-        <input class="inputs" type="text" id="cpf" name="cpf" required>
+        <input class="inputs" type="text" id="cpf" name="cpf" required onblur="verificarCPF()">
       </div>
       <div>
         <label for="cargo_publico">Cargo Público:</label>
@@ -317,6 +317,27 @@
       // Verifica se os dígitos calculados correspondem aos dois últimos dígitos do CPF
       return checkDigit1 === parseInt(cpf.charAt(9)) && checkDigit2 === parseInt(cpf.charAt(10));
     }
+
+    function verificarCPF() {
+    var cpf = document.getElementById('cpf').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/check_cpf?cpf=" + cpf, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.exists) {
+                alert("CPF já cadastrado. Por favor, verifique.");
+                document.getElementById('cpf').value = "";
+                // Impede o envio dos dados
+                document.getElementById('declaracaoForm').onsubmit = function() {
+                    return false;
+                };
+            }
+        }
+    }
+    xhr.send();
+}
+
   </script>
 </body>
 

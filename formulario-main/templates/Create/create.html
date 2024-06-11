@@ -292,7 +292,7 @@
       </div>
       <div>
         <label for="cpf">CPF:</label>
-        <input type="text" id="cpf" name="cpf" class="inputsTitular" required>
+        <input class="inputsTitular" type="text" id="cpf" name="cpf" required onblur="verificarCPF()">
       </div>
     </div>
 
@@ -338,7 +338,7 @@
     </div>
 
     <div id="conjuge_form" style="display: none;">
-      
+
       <label for="nome_conjuge">Nome do cônjuge:</label>
       <input class="inputsDadosConjuge" type="text" id="nome_conjuge" name="nome_conjuge" required><br><br>
       <label for="rg_conjuge">RG do cônjuge:</label>
@@ -578,41 +578,61 @@
     }
 
     function validarFormulario() {
-  // Valida os campos obrigatórios
-  if (!validarCampo('nome_completo') ||
-    !validarCampo('rg') ||
-    !validarCampo('cpf') ||
-    !validarCampo('cargo_publico') ||
-    !validarCampo('endereco_rua') ||
-    !validarCampo('endereco_cep')) {
-    return false;
-  }
+      // Valida os campos obrigatórios
+      if (!validarCampo('nome_completo') ||
+        !validarCampo('rg') ||
+        !validarCampo('cpf') ||
+        !validarCampo('cargo_publico') ||
+        !validarCampo('endereco_rua') ||
+        !validarCampo('endereco_cep')) {
+        return false;
+      }
 
-  // Valida a tabela de patrimônio
-  if (!validarTabela('patrimonio_table')) {
-    return false;
-  }
+      // Valida a tabela de patrimônio
+      if (!validarTabela('patrimonio_table')) {
+        return false;
+      }
 
-  // Valida o cônjuge
-  if (!validarConjuge()) {
-    return false;
-  }
+      // Valida o cônjuge
+      if (!validarConjuge()) {
+        return false;
+      }
 
-  // Valida o dependente
-  if (!validarDependente()) {
-    return false;
-  }
+      // Valida o dependente
+      if (!validarDependente()) {
+        return false;
+      }
 
-  return true;
-}
+      return true;
+    }
 
-document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
-  event.preventDefault(); // Impede o submit padrão
+    document.getElementById('declaracaoForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Impede o submit padrão
 
-  if (validarFormulario()) {
-    abrirModal();
-  }
-});
+      if (validarFormulario()) {
+        abrirModal();
+      }
+    });
+
+    function verificarCPF() {
+      var cpf = document.getElementById('cpf').value;
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/check_cpf?cpf=" + cpf, true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var response = JSON.parse(xhr.responseText);
+          if (response.exists) {
+            alert("CPF já cadastrado. Por favor, verifique.");
+            document.getElementById('cpf').value = "";
+            // Impede o envio dos dados
+            document.getElementById('declaracaoForm').onsubmit = function () {
+              return false;
+            };
+          }
+        }
+      }
+      xhr.send();
+    }
   </script>
 </body>
 
