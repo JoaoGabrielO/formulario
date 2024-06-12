@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from requests import Session
 from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import OperationalError, IntegrityError
@@ -11,8 +12,13 @@ from sqlalchemy import create_engine
 
 app.config['SECRET_KEY'] = 'sua_chave'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@10.10.10.103:3306/formulario_declaracao"
-app.config['SQLALCHEMY_POOL_SIZE'] = 20  # Aumente o tamanho do pool
-app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10  # Ajuste o limite de overflow se necessário
+# Define as opções de pool no Flask-SQLAlchemy
+app.config['SQLALCHEMY_POOL_SIZE'] = 20
+app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
+
+# Crie o engine SQLAlchemy
+engine = create_engine("mysql://root:123456@{10.10.10.103}:3306/formulario_declaracao")
+db = SQLAlchemy(app, engine_options={'pool_pre_ping': True})
 
 db = SQLAlchemy(app) 
 
@@ -345,4 +351,4 @@ def show_funcionario(funcionario_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=10000)
+    app.run(debug=False, host='0.0.0.0', port=10000)
