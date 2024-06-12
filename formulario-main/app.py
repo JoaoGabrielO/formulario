@@ -20,7 +20,6 @@ app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
 engine = create_engine("mysql://root:123456@{10.10.10.103}:3306/formulario_declaracao")
 db = SQLAlchemy(app, engine_options={'pool_pre_ping': True})
 
-db = SQLAlchemy(app) 
 
 try:
     conexao = db.engine.connect()
@@ -271,8 +270,6 @@ def check_cpf():
     if funcionario_existente:
         return jsonify({"exists": True})
     return jsonify({"exists": False})
-
-
 
 # @app.route("/update/<int:id>", methods=["GET", "POST"])
 # def update(id):
